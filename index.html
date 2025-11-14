@@ -779,6 +779,10 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         
         .modal-btn-cancel {
@@ -1037,15 +1041,57 @@
         let ipCheckInterval;
         let currentNotificationTimeout = null;
 
+        function initializeButtonProtection() {
+            const buttons = document.querySelectorAll('button, .download-btn, .giris-yap-btn, .history-btn, .use-token-btn, .btn-secondary, .toggle-ip-btn, .bottom-sheet-close, .modal-btn, .paste-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                
+                button.addEventListener('mousedown', function(e) {
+                    if (e.button === 0) {
+                        e.preventDefault();
+                    }
+                });
+                
+                button.addEventListener('selectstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                
+                button.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        }
+
+        function isValidToken(token) {
+            const trimmedToken = token.trim();
+            return trimmedToken.startsWith('yx-') || trimmedToken.startsWith('ty-');
+        }
+
         async function pasteToken() {
             try {
                 const text = await navigator.clipboard.readText();
-                if (text) {
-                    document.getElementById('token').value = text;
-                    showSystemNotification('Token yapıştırıldı', 'success');
+                
+                if (!text || !text.trim()) {
+                    showSystemNotification('Kopyalanmış token bulunamadı', 'error');
+                    return;
                 }
+                
+                if (!isValidToken(text)) {
+                    showSystemNotification('Kopyalanmış token bulunamadı', 'error');
+                    return;
+                }
+                
+                document.getElementById('token').value = text;
+                showSystemNotification('Token yapıştırıldı', 'success');
+                
             } catch (err) {
-                showSystemNotification('Yapıştırma başarısız', 'error');
+                showSystemNotification('Yapıştırma başarısız: izin verilmemiş', 'error');
             }
         }
 
@@ -1417,6 +1463,7 @@
         document.getElementById('toggleIpBtn').addEventListener('click', toggleIPVisibility);
         
         document.addEventListener('DOMContentLoaded', function() {
+            initializeButtonProtection();
             loadIPAddress();
             
             ipCheckInterval = setInterval(loadIPAddress, 10000);
