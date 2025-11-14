@@ -1385,9 +1385,7 @@
                         tokenElement.className = 'history-token';
                         
                         const isCurrentIP = item.ip === currentIP;
-                        const ipDisplay = isCurrentIP ? 
-                            `${item.ip} <span class="current-ip">(Mevcut)</span>` : 
-                            item.ip;
+                        const ipDisplay = `IP: ${item.ip}${isCurrentIP ? ' <span class="current-ip">(● Mevcut IP)</span>' : ''}`;
                         
                         tokenElement.innerHTML = `
                             <div class="token-info">
