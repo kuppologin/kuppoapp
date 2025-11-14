@@ -44,26 +44,30 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // ✅ GERÇEK API'YI BURADA ÇAĞIRIYORUZ
+    // ✅ GERÇEK KUPPO API'SINI ÇAĞIR
     const apiUrl = `https://admin.kuppo.net/getData.php?token=${encodeURIComponent(token)}`;
-    console.log('🌐 API çağrısı:', apiUrl);
+    console.log('🌐 Kuppo API çağrısı:', apiUrl);
     
     const apiResponse = await fetch(apiUrl);
-    const apiData = await apiResponse.text();
     
-    console.log('📡 API cevabı:', apiData);
+    if (!apiResponse.ok) {
+      throw new Error(`Kuppo API error: ${apiResponse.status}`);
+    }
+    
+    const apiData = await apiResponse.json(); // ✅ JSON olarak parse et
+    console.log('📡 Kuppo API cevabı:', apiData);
 
-    // API cevabını parse et ve doğrula
-    // Bu kısmı API'nın döndüğü formata göre ayarlayın
-    const isValid = apiData.includes('success') || apiData.includes('true') || !apiData.includes('error');
+    // ✅ ÇOK BASİT: SADECE status DEĞERİNE BAK
+    const isValid = apiData.status === true;
+
+    console.log('✅ Token geçerli mi?:', isValid);
     
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({ 
         status: isValid,
-        message: isValid ? 'Token is valid' : 'Invalid token',
-        apiResponse: apiData // Debug için
+        message: isValid ? 'Token is valid' : 'Invalid token'
       })
     };
 
