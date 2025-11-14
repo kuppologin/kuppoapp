@@ -72,6 +72,7 @@
             color: white;
             font-weight: 500;
             font-size: 13px;
+            white-space: nowrap;
         }
         
         .toggle-ip-btn:hover {
@@ -166,25 +167,29 @@
             display: flex;
             gap: 10px;
             margin-left: 28px;
+            flex-wrap: wrap;
         }
         
         .download-btn {
             flex: 1;
-            padding: 12px 8px;
+            min-width: 140px;
+            padding: 14px 12px;
             text-align: center;
             background: white;
             color: #0F2B76;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 12px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 600;
             border: 2px solid #0F2B76;
             transition: all 0.3s;
-            min-height: 44px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1.2;
+            word-wrap: break-word;
+            white-space: normal;
         }
         
         .download-btn:hover {
@@ -388,6 +393,7 @@
             flex-direction: column;
             flex: 1;
             gap: 6px;
+            min-width: 0;
         }
         
         .token-text {
@@ -396,12 +402,14 @@
             font-weight: 600;
             color: #1a202c;
             letter-spacing: -0.2px;
+            word-break: break-all;
         }
         
         .token-details {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-wrap: wrap;
         }
         
         .token-ip {
@@ -411,11 +419,13 @@
             padding: 4px 8px;
             border-radius: 6px;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         .token-date {
             font-size: 12px;
             color: #94a3b8;
+            white-space: nowrap;
         }
         
         .current-ip {
@@ -427,7 +437,7 @@
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 16px;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 600;
@@ -436,6 +446,8 @@
             white-space: nowrap;
             margin-left: 12px;
             box-shadow: 0 4px 12px rgba(15, 43, 118, 0.3);
+            min-width: 70px;
+            flex-shrink: 0;
         }
         
         .use-token-btn:hover {
@@ -492,18 +504,18 @@
             left: 50%;
             transform: translateX(-50%);
             background: white;
-            padding: 18px 25px;
+            padding: 16px 20px;
             border-radius: 14px;
-            font-size: 15px;
+            font-size: 14px;
             box-shadow: 0 12px 40px rgba(0,0,0,0.2);
             z-index: 2000;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             border-left: 5px solid #0F2B76;
             transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             max-width: 90%;
-            min-width: 300px;
+            min-width: 280px;
             backdrop-filter: blur(20px);
         }
         
@@ -532,15 +544,15 @@
         }
         
         .system-notification-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             flex-shrink: 0;
         }
         
@@ -563,6 +575,57 @@
         .system-notification-text {
             flex: 1;
             font-weight: 500;
+            word-break: break-word;
+        }
+        
+        .status-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #0F2B76;
+            transition: bottom 0.3s ease-out;
+            max-width: 90%;
+            min-width: 200px;
+        }
+        
+        .status-notification.show {
+            bottom: 100px;
+        }
+        
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        
+        .status-icon.loading {
+            background: #0F2B76;
+            animation: spin 1s linear infinite;
+        }
+        
+        .status-icon.error {
+            background: #dc2626;
+        }
+        
+        .status-icon.success {
+            background: #16a34a;
         }
         
         .modal-overlay {
@@ -672,58 +735,56 @@
             color: #0F2B76;
         }
 
-        .status-notification {
-            position: fixed;
-            bottom: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 20px 25px;
-            border-radius: 12px;
-            font-size: 14px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-left: 4px solid #0F2B76;
-            transition: bottom 0.3s ease-out;
-            max-width: 90%;
-        }
-        
-        .status-notification.show {
-            bottom: 30px;
-        }
-        
-        .status-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        
-        .status-icon.loading {
-            background: #0F2B76;
-            animation: spin 1s linear infinite;
-        }
-        
-        .status-icon.error {
-            background: #dc2626;
-        }
-        
-        .status-icon.success {
-            background: #16a34a;
-        }
-        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .download-btn {
+                min-width: 120px;
+                font-size: 12px;
+                padding: 12px 8px;
+            }
+            
+            .system-notification {
+                min-width: 250px;
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+            
+            .use-token-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+            
+            .token-details {
+                gap: 8px;
+            }
+            
+            .token-ip, .token-date {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .download-links {
+                flex-direction: column;
+            }
+            
+            .download-btn {
+                min-width: 100%;
+            }
+            
+            .ip-display-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .toggle-ip-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -780,14 +841,14 @@
         </div>
         
         <div class="footer">
-            <a href="https://kuppo.net" class="website-link" target="_blank">www.kuppo.net</a>
+            <a href="https://kuppo.net" class="website-link" target="_blank">kuppo.net</a>
         </div>
     </div>
 
     <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
         <div class="bottom-sheet" id="bottomSheet">
             <div class="bottom-sheet-header">
-                <div class="bottom-sheet-title">Geçmiş Tokenler</div>
+                <div class="bottom-sheet-title">Geçmiş</div>
                 <button class="bottom-sheet-close" onclick="closeBottomSheet()">&times;</button>
             </div>
             <div class="bottom-sheet-content">
@@ -808,7 +869,7 @@
             </div>
             <div class="modal-content">
                 <div class="modal-text">
-                    IP adresinizi değiştirmediniz. Yine de devam edilsin mi?
+                    IP adresi değiştirilmedi. Yine de devam edilsin mi?
                 </div>
             </div>
             <div class="modal-footer">
@@ -836,11 +897,17 @@
         let pendingToken = '';
         let isIPHidden = false;
         let ipCheckInterval;
+        let currentNotificationTimeout = null;
 
         function showSystemNotification(message, type = 'info') {
             const notification = document.getElementById('systemNotification');
             const notificationText = document.getElementById('systemNotificationText');
             const notificationIcon = notification.querySelector('.system-notification-icon');
+            
+            if (currentNotificationTimeout) {
+                clearTimeout(currentNotificationTimeout);
+                notification.classList.remove('show');
+            }
             
             notificationText.textContent = message;
             
@@ -860,11 +927,14 @@
                 notificationIcon.textContent = 'i';
             }
             
-            notification.classList.add('show');
-            
             setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            currentNotificationTimeout = setTimeout(() => {
                 notification.classList.remove('show');
-            }, 4000);
+                currentNotificationTimeout = null;
+            }, 1900);
         }
 
         async function getIPAddress() {
@@ -1036,7 +1106,7 @@
                 
                 if (result.status === true) {
                     hideStatusNotification();
-                    showStatusNotification('Token doğrulandı', 'success');
+                    showSystemNotification('Token doğrulandı', 'success');
                     
                     tokenIPMap[token] = currentIP;
                     localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
@@ -1130,13 +1200,13 @@
                             e.stopPropagation();
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
-                            showSystemNotification('Token inputa eklendi. Giriş yapmak için butona tıklayın.', 'success');
+                            showSystemNotification('Giriş yapmak için butona tıklayın.', 'success');
                         };
                         
                         tokenElement.onclick = () => {
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
-                            showSystemNotification('Token inputa eklendi. Giriş yapmak için butona tıklayın.', 'success');
+                            showSystemNotification('Giriş yapmak için butona tıklayın.', 'success');
                         };
                         
                         historyTokens.appendChild(tokenElement);
