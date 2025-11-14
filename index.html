@@ -1042,7 +1042,7 @@
                 
             } catch (error) {
                 console.error('Token doğrulama hatası:', error);
-                throw new Error('Token doğrulama servisine ulaşılamıyor');
+                throw new Error('Token doğrulama servisine ulaşılamadı');
             }
         }
 
@@ -1200,13 +1200,13 @@
                             e.stopPropagation();
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
-                            showSystemNotification('Giriş yapmak için butona tıklayın.', 'success');
+                            showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
                         };
                         
                         tokenElement.onclick = () => {
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
-                            showSystemNotification('Giriş yapmak için butona tıklayın.', 'success');
+                            showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
                         };
                         
                         historyTokens.appendChild(tokenElement);
