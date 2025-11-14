@@ -1,12 +1,10 @@
 exports.handler = async function(event, context) {
-  // CORS headers
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
   };
 
-  // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -16,10 +14,9 @@ exports.handler = async function(event, context) {
   }
 
   try {
-    // Token parametresini al
     const { token } = event.queryStringParameters;
     
-    console.log('🔐 Token doğrulanıyor:', token);
+    console.log('Token doğrulanıyor:', token);
     
     if (!token) {
       return {
@@ -32,7 +29,6 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // Token formatını kontrol et
     if (!token.startsWith('yx-') && !token.startsWith('ty-')) {
       return {
         statusCode: 200,
@@ -44,23 +40,28 @@ exports.handler = async function(event, context) {
       };
     }
 
-    // ✅ GERÇEK KUPPO API'SINI ÇAĞIR
-    const apiUrl = `https://admin.kuppo.net/getData.php?token=${encodeURIComponent(token)}`;
-    console.log('🌐 Kuppo API çağrısı:', apiUrl);
+    let apiUrl;
+    
+    if (token.startsWith('yx-')) {
+      apiUrl = `https://admin.kuppo.net/getData.php?token=${encodeURIComponent(token)}`;
+    } else if (token.startsWith('ty-')) {
+      apiUrl = `https://admin.kuppo.net/getCookie.php?token=${encodeURIComponent(token)}&all=1`;
+    }
+    
+    console.log('API çağrısı:', apiUrl);
     
     const apiResponse = await fetch(apiUrl);
     
     if (!apiResponse.ok) {
-      throw new Error(`Kuppo API error: ${apiResponse.status}`);
+      throw new Error(`API error: ${apiResponse.status}`);
     }
     
-    const apiData = await apiResponse.json(); // ✅ JSON olarak parse et
-    console.log('📡 Kuppo API cevabı:', apiData);
+    const apiData = await apiResponse.json();
+    console.log('API cevabı:', apiData);
 
-    // ✅ ÇOK BASİT: SADECE status DEĞERİNE BAK
     const isValid = apiData.status === true;
 
-    console.log('✅ Token geçerli mi?:', isValid);
+    console.log('Token geçerli mi?:', isValid);
     
     return {
       statusCode: 200,
@@ -72,7 +73,7 @@ exports.handler = async function(event, context) {
     };
 
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
