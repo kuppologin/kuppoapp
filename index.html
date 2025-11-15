@@ -1544,6 +1544,16 @@
                     return;
                 }
 
+                let appLink;
+                if (packageName === 'com.inovel.app.yemeksepeti.clone') {
+                    appLink = 'kuppoys://';
+                } else if (packageName === 'com.trendyol.go.clone') {
+                    appLink = 'kuppo://';
+                } else {
+                    resolve(false);
+                    return;
+                }
+
                 const timeout = setTimeout(() => {
                     window.removeEventListener('blur', onBlur);
                     resolve(false);
@@ -1557,14 +1567,7 @@
 
                 window.addEventListener('blur', onBlur);
 
-                const iframe = document.createElement('iframe');
-                iframe.style.cssText = 'display:none !important';
-                iframe.src = `intent://${packageName}#Intent;scheme=package;end`;
-                document.body.appendChild(iframe);
-
-                setTimeout(() => {
-                    document.body.removeChild(iframe);
-                }, 2000);
+                window.location.href = appLink;
             });
         }
 
@@ -1690,32 +1693,31 @@
             showStatusNotification('Token kontrol ediliyor', 'loading');
             
             try {
-                let packageName, appName, apkLink;
-                
-                if (token.startsWith('yx-')) {
-                    packageName = 'com.inovel.app.yemeksepeti.clone';
-                    appName = 'Kuppo YS';
-                    apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
-                } else if (token.startsWith('ty-')) {
-                    packageName = 'com.trendyol.go.clone';
-                    appName = 'TY GO';
-                    apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
-                }
-                
-                const isAppInstalled = await checkAppInstalled(packageName);
-                
-                if (!isAppInstalled) {
-                    hideStatusNotification();
-                    showAppNotInstalledModal(appName, apkLink);
-                    button.disabled = false;
-                    return;
-                }
-                
                 const isValid = await validateToken(token);
                 
                 if (isValid) {
                     hideStatusNotification();
                     showSystemNotification('Token doğrulandı', 'success');
+                    
+                    let packageName, appName, apkLink;
+                    
+                    if (token.startsWith('yx-')) {
+                        packageName = 'com.inovel.app.yemeksepeti.clone';
+                        appName = 'Kuppo YS';
+                        apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
+                    } else if (token.startsWith('ty-')) {
+                        packageName = 'com.trendyol.go.clone';
+                        appName = 'TY GO';
+                        apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
+                    }
+                    
+                    const isAppInstalled = await checkAppInstalled(packageName);
+                    
+                    if (!isAppInstalled) {
+                        showAppNotInstalledModal(appName, apkLink);
+                        button.disabled = false;
+                        return;
+                    }
                     
                     tokenIPMap[token] = currentIP;
                     localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
