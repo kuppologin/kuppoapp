@@ -997,7 +997,6 @@
             font-weight: 500;
             word-break: break-word;
         }
-        /* YENİ: Uygulama Yüklü Değil Modal */
         .app-not-installed-modal {
             position: fixed;
             top: 0;
@@ -1310,7 +1309,6 @@
         </div>
     </div>
 
-    <!-- YENİ: Uygulama Yüklü Değil Modal -->
     <div class="app-not-installed-modal" id="appNotInstalledModal">
         <div class="app-not-installed-content">
             <div class="app-not-installed-header">
@@ -1675,51 +1673,10 @@
             notification.classList.remove('show');
         }
 
-        // YENİ: Basit uygulama kontrolü - sadece scheme denemesi
-        async function checkAppInstalled(appScheme, appName, apkLink) {
-            return new Promise((resolve) => {
-                let appChecked = false;
-                
-                // 1.5 saniye içinde uygulama açılırsa blur event'i tetiklenir
-                const timeout = setTimeout(() => {
-                    if (!appChecked) {
-                        appChecked = true;
-                        resolve(false); // Uygulama yüklü değil
-                    }
-                }, 1500);
-
-                // Uygulama açılırsa sayfa blur olur
-                const onBlur = () => {
-                    if (!appChecked) {
-                        appChecked = true;
-                        clearTimeout(timeout);
-                        resolve(true); // Uygulama yüklü ve açıldı
-                    }
-                };
-
-                window.addEventListener('blur', onBlur, { once: true });
-
-                // Scheme'i deneyelim
-                const testLink = `${appScheme}test`;
-                window.location.href = testLink;
-
-                // Eğer 100ms içinde hala bu sayfadaysak, scheme çalışmamış demektir
-                setTimeout(() => {
-                    if (!appChecked) {
-                        // Fallback: iframe ile deneyelim
-                        const iframe = document.createElement('iframe');
-                        iframe.style.display = 'none';
-                        iframe.src = appScheme;
-                        document.body.appendChild(iframe);
-                        
-                        setTimeout(() => {
-                            if (!appChecked && iframe.parentNode) {
-                                document.body.removeChild(iframe);
-                            }
-                        }, 1000);
-                    }
-                }, 100);
-            });
+        // YENİ: Basitleştirilmiş uygulama kontrolü
+        async function checkAppInstalledSimple(appScheme, appName, apkLink) {
+            // Artık karmaşık kontrol yapmıyoruz, hemen true döndürüyoruz
+            return true;
         }
 
         // YENİ: Uygulama yüklü değil modal'ını göster
@@ -1765,21 +1722,21 @@
             }
         }
 
-        // YENİ: Geliştirilmiş tek tıklamalı login fonksiyonu
+        // YENİ: Optimize edilmiş tek tıklamalı login fonksiyonu
         async function handleSingleClickLogin() {
             if (isProcessing) return;
             
             const button = document.querySelector('.giris-yap-btn');
             const originalText = button.textContent;
-            const originalBackground = button.style.background;
             
-            // Gesture'ı kaydet ve butonu kilitle
+            // Gesture context'i başlat
             gestureStartTime = Date.now();
             isProcessing = true;
             button.disabled = true;
+            button.textContent = "Token kontrol ediliyor...";
 
             try {
-                // 1. Token kontrolü
+                // 1. Token al
                 const tokenInput = document.getElementById("token");
                 const token = tokenInput.value.trim();
                 
@@ -1795,18 +1752,13 @@
                 if (!isAndroidDevice()) {
                     let appName = token.startsWith('yx-') ? "Kuppo YS" : "TY GO";
                     showIncompatibleDeviceWarning(appName);
-                    resetButton(button, originalText, originalBackground);
+                    resetButton(button, originalText);
                     return;
                 }
                 
                 // 3. Token validation
-                button.textContent = "Token kontrol ediliyor...";
                 showStatusNotification('Token kontrol ediliyor', 'loading');
-                
-                const isValid = await Promise.race([
-                    validateToken(token),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Token doğrulama zaman aşımı')), 5000))
-                ]);
+                const isValid = await validateToken(token);
                 
                 if (!isValid) {
                     throw new Error('Geçersiz token');
@@ -1827,52 +1779,52 @@
                     apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
                 }
 
-                // 5. Uygulama kontrolü
-                button.textContent = "Uygulama kontrol ediliyor...";
-                showStatusNotification('Uygulama kontrol ediliyor', 'loading');
-
-                const isAppInstalled = await checkAppInstalled(appScheme, appName, apkLink);
-                hideStatusNotification();
-
-                if (!isAppInstalled) {
-                    showAppNotInstalledModal(appName, apkLink);
-                    resetButton(button, originalText, originalBackground);
-                    return;
-                }
-
-                // 6. Geçmişe ekle
-                tokenIPMap[token] = currentIP;
-                localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
+                // 5. Uygulama kontrolünü atla ve hemen uygulamayı aç
+                button.textContent = "Uygulamaya yönlendiriliyor...";
+                
+                // Geçmişe ekle
                 await addToHistory(token);
                 
-                // 7. Scheme çağrısı - Gesture context korunarak
-                button.textContent = "Uygulamaya yönlendiriliyor...";
-                button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
-                
+                // Gesture-safe scheme çağrısı
                 const appLink = `${appScheme}login?token=${encodeURIComponent(token)}`;
                 
-                // Gesture context içinde scheme çağrısı yap
-                setTimeout(() => {
-                    window.location.href = appLink;
-                }, 100);
+                // ÖNCE doğrudan location ile dene
+                window.location.href = appLink;
                 
-                // Butonu 3 saniye sonra resetle
+                // SONRA iframe fallback (gesture context hala aktif)
                 setTimeout(() => {
-                    resetButton(button, originalText, originalBackground);
-                    document.getElementById('token').value = "";
-                }, 3000);
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = appLink;
+                    document.body.appendChild(iframe);
+                    
+                    setTimeout(() => {
+                        if (iframe.parentNode) {
+                            document.body.removeChild(iframe);
+                        }
+                    }, 1000);
+                }, 50);
+                
+                // 6. Eğer 2 saniye içinde uygulama açılmazsa, modal göster
+                setTimeout(() => {
+                    // Eğer hala bu sayfadaysak, uygulama açılmamış demektir
+                    if (!document.hidden) {
+                        showAppNotInstalledModal(appName, apkLink);
+                        resetButton(button, originalText);
+                        tokenInput.value = "";
+                    }
+                }, 2000);
                 
             } catch (error) {
                 hideStatusNotification();
                 showSystemNotification(error.message, 'error');
-                resetButton(button, originalText, originalBackground);
+                resetButton(button, originalText);
             }
         }
 
         // Buton reset fonksiyonu
-        function resetButton(button, originalText, originalBackground) {
+        function resetButton(button, originalText) {
             button.textContent = originalText;
-            button.style.background = originalBackground;
             button.disabled = false;
             isProcessing = false;
         }
@@ -1881,7 +1833,6 @@
             const tokenToUse = pendingToken;
             closeIPWarning();
             if (tokenToUse) {
-                // Token'ı input'a yerleştir ve işlemi başlat
                 document.getElementById('token').value = tokenToUse;
                 handleSingleClickLogin();
             }
