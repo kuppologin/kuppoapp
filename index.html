@@ -1387,7 +1387,8 @@
         let gestureStartTime = 0;
         let currentAppData = null;
         let appCheckTimeout = null;
-        let visibilityChangeHandler = null;
+        let blurHandler = null;
+        let focusHandler = null;
 
         function isAndroidDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -1723,36 +1724,58 @@
             }
         }
 
-        // YENİ: Akıllı uygulama kontrol timeout'u
+        // YENİ: Geliştirilmiş uygulama kontrol timeout'u - BLUR + FOCUS
         function setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput) {
             // Önceki timeout'u temizle
             if (appCheckTimeout) {
                 clearTimeout(appCheckTimeout);
             }
             
-            // Önceki event listener'ı temizle
-            if (visibilityChangeHandler) {
-                document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            // Önceki event listener'ları temizle
+            if (blurHandler) {
+                window.removeEventListener('blur', blurHandler);
+            }
+            if (focusHandler) {
+                window.removeEventListener('focus', focusHandler);
             }
             
-            appCheckTimeout = setTimeout(() => {
-                // Eğer sayfa hala görünür durumdaysa (yani uygulama açılmamışsa)
-                if (document.visibilityState === 'visible') {
-                    showAppNotInstalledModal(appName, apkLink);
-                    resetButton(button, originalText);
-                    tokenInput.value = "";
-                }
-            }, 2000);
-
-            // Yeni event listener oluştur
-            visibilityChangeHandler = () => {
-                if (document.visibilityState === 'hidden') {
-                    // Uygulama açıldı, timeout'u temizle
-                    clearTimeout(appCheckTimeout);
+            let appOpened = false;
+            let blurTime = 0;
+            
+            // Blur event'i: Uygulama açıldığında tetiklenir
+            blurHandler = () => {
+                blurTime = Date.now();
+                appOpened = true;
+                console.log('Uygulama açıldı - blur event tetiklendi');
+            };
+            
+            // Focus event'i: Kullanıcı uygulamadan geri döndüğünde tetiklenir
+            focusHandler = () => {
+                if (appOpened && blurTime > 0) {
+                    const timeSinceBlur = Date.now() - blurTime;
+                    // Eğer blur'dan sonra yeterli zaman geçtiyse (uygulama kullanıldıysa)
+                    if (timeSinceBlur > 1000) {
+                        clearTimeout(appCheckTimeout);
+                        console.log('Uygulama başarıyla açıldı ve kullanıldı - timeout iptal edildi');
+                        // Butonu resetle
+                        resetButton(button, originalText, tokenInput);
+                    }
                 }
             };
-
-            document.addEventListener('visibilitychange', visibilityChangeHandler);
+            
+            window.addEventListener('blur', blurHandler);
+            window.addEventListener('focus', focusHandler);
+            
+            // 2 saniye sonra hala uygulama açılmadıysa modal göster
+            appCheckTimeout = setTimeout(() => {
+                if (!appOpened) {
+                    console.log('Uygulama açılmadı - modal gösteriliyor');
+                    showAppNotInstalledModal(appName, apkLink);
+                    resetButton(button, originalText, tokenInput);
+                }
+            }, 2000);
+            
+            return appCheckTimeout;
         }
 
         // YENİ: Optimize edilmiş tek tıklamalı login fonksiyonu
@@ -1761,17 +1784,16 @@
             
             const button = document.querySelector('.giris-yap-btn');
             const originalText = button.textContent;
-            const originalBackground = button.style.background;
+            const tokenInput = document.getElementById("token");
             
             // Gesture context'i başlat
             gestureStartTime = Date.now();
             isProcessing = true;
             button.disabled = true;
-            button.style.background = '#6c757d'; // Gri renk
+            button.style.background = '#6c757d'; // Gri renk - Token kontrolü sırasında
 
             try {
                 // 1. Token al
-                const tokenInput = document.getElementById("token");
                 const token = tokenInput.value.trim();
                 
                 if (!token) {
@@ -1786,7 +1808,7 @@
                 if (!isAndroidDevice()) {
                     let appName = token.startsWith('yx-') ? "Kuppo YS" : "TY GO";
                     showIncompatibleDeviceWarning(appName);
-                    resetButton(button, originalText, originalBackground);
+                    resetButton(button, originalText, tokenInput);
                     return;
                 }
                 
@@ -1846,25 +1868,34 @@
             } catch (error) {
                 hideStatusNotification();
                 showSystemNotification(error.message, 'error');
-                resetButton(button, originalText, originalBackground);
+                resetButton(button, originalText, tokenInput);
             }
         }
 
-        // Buton reset fonksiyonu
-        function resetButton(button, originalText, originalBackground) {
+        // YENİ: Geliştirilmiş buton reset fonksiyonu
+        function resetButton(button, originalText, tokenInput) {
             button.textContent = originalText;
-            button.style.background = originalBackground;
+            button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
             button.disabled = false;
             isProcessing = false;
             
-            // Timeout ve event listener'ı temizle
+            // Timeout ve event listener'ları temizle
             if (appCheckTimeout) {
                 clearTimeout(appCheckTimeout);
                 appCheckTimeout = null;
             }
-            if (visibilityChangeHandler) {
-                document.removeEventListener('visibilitychange', visibilityChangeHandler);
-                visibilityChangeHandler = null;
+            if (blurHandler) {
+                window.removeEventListener('blur', blurHandler);
+                blurHandler = null;
+            }
+            if (focusHandler) {
+                window.removeEventListener('focus', focusHandler);
+                focusHandler = null;
+            }
+            
+            // Token input'unu temizle
+            if (tokenInput) {
+                tokenInput.value = "";
             }
         }
 
