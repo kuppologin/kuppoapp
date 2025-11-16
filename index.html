@@ -1252,6 +1252,9 @@
         let ipCheckInProgress = false;
         let appCheckInProgress = false;
 
+        let validatedToken = null;
+        let validatedAppScheme = null;
+
         function isAndroidDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
             return /android/.test(userAgent) || /linux arm/.test(userAgent);
@@ -1727,15 +1730,31 @@
                     button.textContent = "Uygulamaya Yönlendiriliyor...";
                     button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
                     
-                    let appLink;
-                    if (token.startsWith('yx-')) {
-                        appLink = `intent://login?token=${token}#Intent;scheme=kuppoys;package=com.kuppo.ys;end`;
-                    } else if (token.startsWith('ty-')) {
-                        appLink = `intent://login?token=${token}#Intent;scheme=kuppo;package=com.kuppo.ty;end`;
-                    }
+                    validatedToken = token;
+                    validatedAppScheme = appScheme;
                     
-                    setTimeout(() => {
+                    const openAppButton = document.createElement('button');
+                    openAppButton.textContent = "Uygulamayı Aç";
+                    openAppButton.style.cssText = `
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                        z-index: 10000;
+                    `;
+                    openAppButton.onclick = function() {
+                        let appLink;
+                        if (validatedToken.startsWith('yx-')) {
+                            appLink = `kuppoys://login?token=${validatedToken}`;
+                        } else if (validatedToken.startsWith('ty-')) {
+                            appLink = `kuppo://login?token=${validatedToken}`;
+                        }
+                        
                         window.location.href = appLink;
+                        document.body.removeChild(this);
                         
                         setTimeout(() => {
                             button.textContent = originalText;
@@ -1744,7 +1763,14 @@
                             document.getElementById('token').value = "";
                             pendingToken = '';
                         }, 3000);
-                    }, 500);
+                    };
+                    
+                    document.body.appendChild(openAppButton);
+                    
+                    setTimeout(() => {
+                        openAppButton.click();
+                    }, 100);
+                    
                 } else {
                     hideStatusNotification();
                     showSystemNotification('Geçersiz token', 'error');
