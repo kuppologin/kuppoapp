@@ -1729,21 +1729,25 @@
                     
                     let appLink;
                     if (token.startsWith('yx-')) {
-                        appLink = `kuppoys://login?token=${encodeURIComponent(token)}`;
+                        appLink = `kuppoys://login?token=${token}`;
                     } else if (token.startsWith('ty-')) {
-                        appLink = `kuppo://login?token=${encodeURIComponent(token)}`;
+                        appLink = `kuppo://login?token=${token}`;
                     }
                     
                     setTimeout(() => {
-                        window.location.href = appLink;
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = appLink;
+                        document.body.appendChild(iframe);
                         
                         setTimeout(() => {
+                            document.body.removeChild(iframe);
                             button.textContent = originalText;
                             button.style.background = "linear-gradient(135deg, #0F2B76, #5A21B5)";
                             button.disabled = false;
                             document.getElementById('token').value = "";
                             pendingToken = '';
-                        }, 3000);
+                        }, 1000);
                     }, 500);
                 } else {
                     hideStatusNotification();
