@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuppo YS & TY GO Giriş</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 25px 30px 15px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 16px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .status-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .status-indicator.connecting {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        .status-indicator.connected {
+            background: rgba(34, 197, 94, 0.2);
+        }
+        .status-indicator.disconnected {
+            background: rgba(239, 68, 68, 0.2);
+        }
+        .wifi-icon {
+            width: 20px;
+            height: 20px;
+            position: relative;
+        }
+        .wifi-connecting {
+            color: #3b82f6;
+        }
+        .wifi-connected {
+            color: #22c55e;
+        }
+        .wifi-disconnected {
+            color: #ef4444;
+        }
+        .status-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: white;
+        }
+        .ip-address {
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .ip-display-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .ip-display {
+            font-size: 14px;
+            font-weight: 500;
+            flex: 1;
+        }
+        .toggle-ip-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            border-radius: 10px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: white;
+            font-weight: 500;
+            font-size: 13px;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .toggle-ip-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+        }
+        .eye-icon {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+        .eye-slash-icon {
+            width: 16px;
+            height: 16px;
+            fill: white;
+            display: none;
+        }
+        .logo {
+            width: 200px;
+            height: 60px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .content {
+            padding: 30px;
+        }
+        .token-examples {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .info-box {
+            background: #f0f7ff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 25px;
+            border-left: 4px solid #0F2B76;
+            position: relative;
+        }
+        .info-icon {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 20px;
+            height: 20px;
+            background: #0F2B76;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .info-icon::after {
+            content: "i";
+        }
+        .info-text {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            margin-left: 28px;
+        }
+        .download-links {
+            display: flex;
+            gap: 10px;
+            margin-left: 28px;
+            flex-wrap: wrap;
+        }
+        .download-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 12px;
+            text-align: center;
+            background: white;
+            color: #0F2B76;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 2px solid #0F2B76;
+            transition: all 0.3s;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+            word-wrap: break-word;
+            white-space: normal;
+            gap: 8px;
+            user-select: none;
+        }
+        .download-btn:hover {
+            background: #0F2B76;
+            color: white;
+            transform: translateY(-1px);
+        }
+        .download-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .input-with-paste {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .paste-btn {
+            position: absolute;
+            right: 10px;
+            background: #f8fafc;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .paste-btn:hover {
+            background: #e2e8f0;
+            color: #0F2B76;
+        }
+        .paste-btn i {
+            font-size: 12px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #444;
+            font-size: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 15px 100px 15px 15px;
+            font-size: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.3s;
+            background: white;
+        }
+        input:focus {
+            border-color: #5A21B5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(90, 33, 181, 0.1);
+        }
+        .giris-yap-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(15, 43, 118, 0.3);
+            margin-bottom: 10px;
+            user-select: none;
+        }
+        .giris-yap-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
+        }
+        .history-section {
+            margin-top: 15px;
+        }
+        .history-btn {
+            background: #6c757d;
+            border: 2px solid #6c757d;
+            color: white;
+            font-weight: 600;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15px;
+            width: 100%;
+            user-select: none;
+        }
+        .history-btn:hover {
+            background: #5a6268;
+            border-color: #5a6268;
+            color: white;
+            transform: translateY(-1px);
+        }
+        .history-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            z-index: 1000;
+        }
+        .bottom-sheet {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 70vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1001;
+        }
+        .bottom-sheet.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .bottom-sheet-header {
+            padding: 24px 25px 20px;
+            border-bottom: 1px solid rgba(15, 43, 118, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+        }
+        .bottom-sheet-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0F2B76;
+            letter-spacing: -0.5px;
+        }
+        .bottom-sheet-close {
+            background: rgba(15, 43, 118, 0.1);
+            border: none;
+            font-size: 20px;
+            color: #0F2B76;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .bottom-sheet-close:hover {
+            background: rgba(15, 43, 118, 0.2);
+            transform: rotate(90deg);
+        }
+        .bottom-sheet-content {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+            background: transparent;
+        }
+        .history-tokens {
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px 20px;
+        }
+        .history-token {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(15, 43, 118, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .history-token:hover {
+            background: rgba(15, 43, 118, 0.05);
+            border-color: rgba(15, 43, 118, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(15, 43, 118, 0.15);
+        }
+        .token-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 6px;
+            min-width: 0;
+        }
+        .token-text {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+            letter-spacing: -0.2px;
+            word-break: break-all;
+        }
+        .token-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .token-ip {
+            font-size: 12px;
+            color: #64748b;
+            background: rgba(15, 43, 118, 0.08);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .token-date {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+        .current-ip {
+            color: #0F2B76;
+            font-weight: 600;
+        }
+        .use-token-btn {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            margin-left: 12px;
+            box-shadow: 0 4px 12px rgba(15, 43, 118, 0.3);
+            min-width: 70px;
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .use-token-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
+        }
+        .no-history {
+            text-align: center;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 80px 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            border: 2px dashed rgba(15, 43, 118, 0.1);
+            font-size: 15px;
+            margin: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .bottom-sheet-footer {
+            padding: 20px 25px;
+            border-top: 1px solid rgba(15, 43, 118, 0.1);
+            background: transparent;
+        }
+        .btn-secondary {
+            background: #dc3545;
+            color: white;
+            border: 2px solid #dc3545;
+            box-shadow: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: block;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            user-select: none;
+        }
+        .btn-secondary:hover {
+            background: #c82333;
+            border-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+        .trash-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        .system-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #0F2B76;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 90%;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+        }
+        .system-notification.show {
+            bottom: 30px;
+        }
+        .system-notification.error {
+            border-left-color: #dc2626;
+            background: linear-gradient(135deg, #fef2f2, #fff);
+        }
+        .system-notification.warning {
+            border-left-color: #d97706;
+            background: linear-gradient(135deg, #fffbeb, #fff);
+        }
+        .system-notification.success {
+            border-left-color: #16a34a;
+            background: linear-gradient(135deg, #f0fdf4, #fff);
+        }
+        .system-notification.info {
+            border-left-color: #0F2B76;
+            background: linear-gradient(135deg, #f0f7ff, #fff);
+        }
+        .system-notification-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .system-notification-icon.error {
+            background: #dc2626;
+        }
+        .system-notification-icon.warning {
+            background: #d97706;
+        }
+        .system-notification-icon.success {
+            background: #16a34a;
+        }
+        .system-notification-icon.info {
+            background: #0F2B76;
+        }
+        .system-notification-text {
+            flex: 1;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .status-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #0F2B76;
+            transition: bottom 0.3s ease-out;
+            max-width: 90%;
+            min-width: 200px;
+        }
+        .status-notification.show {
+            bottom: 100px;
+        }
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .status-icon.loading {
+            background: #0F2B76;
+            animation: spin 1s linear infinite;
+        }
+        .status-icon.error {
+            background: #dc2626;
+        }
+        .status-icon.success {
+            background: #16a34a;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 20px 25px;
+            text-align: center;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .modal-content {
+            padding: 25px;
+            text-align: center;
+        }
+        .modal-text {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .modal-footer {
+            padding: 20px 25px;
+            display: flex;
+            gap: 10px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .modal-btn-cancel {
+            background: #f8fafc;
+            color: #444;
+            border: 2px solid #e2e8f0;
+        }
+        .modal-btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+        }
+        .modal-btn-confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 43, 118, 0.3);
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+        .website-link {
+            color: #64748b;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .website-link:hover {
+            color: #0F2B76;
+        }
+        .website-link i {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        .ip-change-notification {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px 24px 0 0;
+            padding: 24px 20px 30px;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2001;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .ip-change-notification.show {
+            bottom: 0;
+        }
+        .ip-change-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(15, 43, 118, 0.1);
+        }
+        .ip-change-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F2B76;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ip-change-title i {
+            font-size: 20px;
+        }
+        .ip-change-close {
+            background: rgba(15, 43, 118, 0.1);
+            border: none;
+            font-size: 18px;
+            color: #0F2B76;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .ip-change-close:hover {
+            background: rgba(15, 43, 118, 0.2);
+        }
+        .ip-change-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .ip-change-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        .ip-change-row.previous {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+        }
+        .ip-change-row.current {
+            background: rgba(34, 197, 94, 0.05);
+            border: 1px solid rgba(34, 197, 94, 0.1);
+        }
+        .ip-change-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #444;
+        }
+        .ip-change-label i {
+            font-size: 16px;
+        }
+        .ip-change-label.previous i {
+            color: #ef4444;
+        }
+        .ip-change-label.current i {
+            color: #22c55e;
+        }
+        .ip-change-value {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .ip-change-value.previous {
+            color: #ef4444;
+        }
+        .ip-change-value.current {
+            color: #22c55e;
+        }
+        .device-warning-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+            padding: 20px;
+        }
+        .device-warning-overlay.active {
+            display: flex;
+        }
+        .device-warning-modal {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            text-align: center;
+        }
+        .device-warning-header {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 25px;
+        }
+        .device-warning-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .device-warning-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .device-warning-content {
+            padding: 25px;
+        }
+        .device-warning-text {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .device-warning-btn {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+        .device-warning-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
+        }
+        .incompatible-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            z-index: 2002;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #dc2626;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 90%;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+        }
+        .incompatible-notification.show {
+            bottom: 30px;
+        }
+        .incompatible-notification-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+            background: #dc2626;
+        }
+        .incompatible-notification-text {
+            flex: 1;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @media (max-width: 480px) {
+            .download-btn {
+                min-width: 120px;
+                font-size: 12px;
+                padding: 12px 8px;
+            }
+            .system-notification {
+                min-width: 250px;
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+            .use-token-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                min-width: 60px;
+            }
+            .token-details {
+                gap: 8px;
+            }
+            .token-ip, .token-date {
+                font-size: 11px;
+            }
+            .paste-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            input {
+                padding: 15px 90px 15px 15px;
+            }
+            .ip-change-notification {
+                padding: 20px 16px 24px;
+                max-width: 100%;
+                border-radius: 20px 20px 0 0;
+            }
+            .device-warning-modal {
+                max-width: 350px;
+            }
+        }
+        @media (max-width: 360px) {
+            .download-links {
+                flex-direction: column;
+            }
+            .download-btn {
+                min-width: 100%;
+            }
+            .ip-display-container {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .toggle-ip-btn {
+                width: 100%;
+            }
+            .paste-btn {
+                position: static;
+                margin-top: 8px;
+                width: 100%;
+                justify-content: center;
+            }
+            input {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="connection-status" id="connectionStatus">
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="wifi-icon" id="wifiIcon">
+                        <i class="fas fa-wifi" id="wifiSymbol"></i>
+                    </div>
+                </div>
+                <div class="status-info">
+                    <div class="status-text" id="statusText">Bağlantı kuruluyor...</div>
+                    <div class="ip-address" id="ipAddress">-</div>
+                </div>
+                <button class="toggle-ip-btn" id="toggleIpBtn">
+                    <svg class="eye-icon" viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                    <svg class="eye-slash-icon" viewBox="0 0 24 24">
+                        <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                    </svg>
+                    <span id="toggleIpText">Gizle</span>
+                </button>
+            </div>
+            <div class="logo">
+                <img src="data:image/png;base64,BASE64YAPİSTİR" alt="Kuppo.net Logo">
+            </div>
+            <h1>Kuppo YS & TY GO Hızlı Giriş</h1>
+        </div>
+        <div class="content">
+            <div class="token-examples">
+                <p><strong>Token formatı:</strong> yx- veya ty- ile başlamalıdır.</p>
+            </div>
+            <div class="info-box">
+                <div class="info-icon"></div>
+                <p class="info-text">Giriş yapmak için Kuppo YS/TY GO uygulamasının cihazınızda kurulu olması gerekir.</p>
+                <div class="download-links">
+                    <a href="https://sunucu.kuppo.net/files/kuppo_ys_v2.apk" class="download-btn" onclick="handleDownload('ys')" target="_blank">
+                        <svg class="download-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        Kuppo YS
+                    </a>
+                    <a href="https://sunucu.kuppo.net/files/TY%20GO%20V2.apk" class="download-btn" onclick="handleDownload('ty')" target="_blank">
+                        <svg class="download-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        TY GO
+                    </a>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="token">Token'inizi girin:</label>
+                <div class="input-with-paste">
+                    <input type="text" id="token" placeholder="Satın aldığınız tokeni buraya yapıştırın">
+                    <button class="paste-btn" onclick="pasteToken()">
+                        <i class="fas fa-paste"></i>
+                        Yapıştır
+                    </button>
+                </div>
+            </div>
+            <button class="giris-yap-btn" onclick="checkIPBeforeLogin()">Giriş Yap</button>
+            <div class="history-section">
+                <div class="history-btn" onclick="openBottomSheet()">
+                    <svg class="history-icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                    </svg>
+                    Geçmiş
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <a href="https://kuppo.net" class="website-link" target="_blank">
+                <i class="fas fa-link"></i>
+                kuppo.net
+            </a>
+        </div>
+    </div>
+
+    <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="bottom-sheet-header">
+                <div class="bottom-sheet-title">Geçmiş</div>
+                <button class="bottom-sheet-close" onclick="closeBottomSheet()">&times;</button>
+            </div>
+            <div class="bottom-sheet-content">
+                <div class="history-tokens" id="historyTokens">
+                    <div class="no-history">Henüz token girişi yapılmamış</div>
+                </div>
+            </div>
+            <div class="bottom-sheet-footer">
+                <button class="btn-secondary" onclick="clearHistory()">
+                    <svg class="trash-icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                    Geçmişi Temizle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ip-change-notification" id="ipChangeNotification">
+        <div class="ip-change-header">
+            <div class="ip-change-title">
+                <i class="fas fa-exchange-alt"></i>
+                IP Adresiniz Değişti
+            </div>
+            <button class="ip-change-close" onclick="closeIPChangeNotification()">&times;</button>
+        </div>
+        <div class="ip-change-content">
+            <div class="ip-change-row previous">
+                <div class="ip-change-label previous">
+                    <i class="fas fa-arrow-left"></i>
+                    Önceki IP
+                </div>
+                <div class="ip-change-value previous" id="previousIPDisplay">-</div>
+            </div>
+            <div class="ip-change-row current">
+                <div class="ip-change-label current">
+                    <i class="fas fa-arrow-right"></i>
+                    Yeni IP
+                </div>
+                <div class="ip-change-value current" id="currentIPDisplay">-</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="device-warning-overlay" id="deviceWarningOverlay">
+        <div class="device-warning-modal">
+            <div class="device-warning-header">
+                <div class="device-warning-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="device-warning-title">Uyumlu Olmayan Cihaz</div>
+            </div>
+            <div class="device-warning-content">
+                <div class="device-warning-text">
+                    Uyumlu olmayan cihaz tespit edildi. Site çalışmayacak.
+                </div>
+                <button class="device-warning-btn" onclick="closeDeviceWarning()">
+                    <i class="fas fa-check"></i>
+                    Tamam
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="ipWarningModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">IP Kontrolü</div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-text">
+                    IP adresi değiştirilmedi. Yine de devam edilsin mi?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeIPWarning()">İptal</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmButton" onclick="continueWithSameIP()">Devam Et</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="system-notification" id="systemNotification">
+        <div class="system-notification-icon info">!</div>
+        <div class="system-notification-text" id="systemNotificationText">Mesaj burada gösterilecek</div>
+    </div>
+
+    <div class="status-notification" id="statusNotification">
+        <div class="status-icon loading">⟳</div>
+        <span id="statusNotificationText">Token kontrol ediliyor</span>
+    </div>
+
+    <div class="incompatible-notification" id="incompatibleNotification">
+        <div class="incompatible-notification-icon">⚠</div>
+        <div class="incompatible-notification-text" id="incompatibleNotificationText">Mesaj burada gösterilecek</div>
+    </div>
+
+    <script>
+        let tokenHistory = JSON.parse(localStorage.getItem('kuppoTokenHistory')) || [];
+        let tokenIPMap = JSON.parse(localStorage.getItem('kuppoTokenIPMap')) || {};
+        let ipHistory = JSON.parse(localStorage.getItem('kuppoIPHistory')) || [];
+        let currentIP = '';
+        let pendingToken = '';
+        let isIPHidden = false;
+        let currentNotificationTimeout = null;
+        let connectionCheckInterval;
+        let isOnline = false;
+        let lastIP = '';
+        let isInitialLoad = true;
+        let ipCheckInProgress = false;
+        let appCheckInProgress = false;
+
+        function isAndroidDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            return /android/.test(userAgent) || /linux arm/.test(userAgent);
+        }
+
+        function showDeviceWarning() {
+            if (!isAndroidDevice()) {
+                document.getElementById('deviceWarningOverlay').classList.add('active');
+            }
+        }
+
+        function closeDeviceWarning() {
+            document.getElementById('deviceWarningOverlay').classList.remove('active');
+        }
+
+        function showIncompatibleDeviceWarning(appName) {
+            const notification = document.getElementById('incompatibleNotification');
+            const notificationText = document.getElementById('incompatibleNotificationText');
+            
+            notificationText.textContent = `${appName} bu cihazda çalışamaz`;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 1900);
+        }
+
+        function initializeButtonProtection() {
+            const buttons = document.querySelectorAll('button, .download-btn, .giris-yap-btn, .history-btn, .use-token-btn, .btn-secondary, .toggle-ip-btn, .bottom-sheet-close, .modal-btn, .paste-btn');
+            buttons.forEach(button => {
+                button.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                button.addEventListener('mousedown', function(e) {
+                    if (e.button === 0) {
+                        e.preventDefault();
+                    }
+                });
+                button.addEventListener('selectstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+                button.addEventListener('dragstart', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        }
+
+        function isValidToken(token) {
+            const trimmedToken = token.trim();
+            return trimmedToken.startsWith('yx-') || trimmedToken.startsWith('ty-');
+        }
+
+        async function pasteToken() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (!text || !text.trim()) {
+                    showSystemNotification('Kopyalanmış token bulunamadı', 'error');
+                    return;
+                }
+                if (!isValidToken(text)) {
+                    showSystemNotification('Kopyalanmış token bulunamadı', 'error');
+                    return;
+                }
+                document.getElementById('token').value = text;
+                showSystemNotification('Token yapıştırıldı', 'success');
+            } catch (err) {
+                showSystemNotification('Yapıştırma başarısız: izin verilmemiş', 'error');
+            }
+        }
+
+        function handleDownload(type) {
+            if (type === 'ys') {
+                showSystemNotification('Kuppo YS indiriliyor...', 'info');
+            } else if (type === 'ty') {
+                showSystemNotification('TY GO indiriliyor...', 'info');
+            }
+        }
+
+        function showSystemNotification(message, type = 'info') {
+            const notification = document.getElementById('systemNotification');
+            const notificationText = document.getElementById('systemNotificationText');
+            const notificationIcon = notification.querySelector('.system-notification-icon');
+            
+            if (currentNotificationTimeout) {
+                clearTimeout(currentNotificationTimeout);
+                notification.classList.remove('show');
+            }
+            
+            notificationText.textContent = message;
+            notification.className = 'system-notification';
+            notificationIcon.className = 'system-notification-icon';
+            notification.classList.add(type);
+            notificationIcon.classList.add(type);
+            
+            if (type === 'error') {
+                notificationIcon.textContent = '!';
+            } else if (type === 'warning') {
+                notificationIcon.textContent = '⚠';
+            } else if (type === 'success') {
+                notificationIcon.textContent = '✓';
+            } else {
+                notificationIcon.textContent = 'i';
+            }
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            currentNotificationTimeout = setTimeout(() => {
+                notification.classList.remove('show');
+                currentNotificationTimeout = null;
+            }, 1900);
+        }
+
+        async function getIPAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                throw new Error('IP alınamadı');
+            }
+        }
+
+        function updateConnectionStatus(status, ip = '') {
+            const statusIndicator = document.getElementById('statusIndicator');
+            const wifiSymbol = document.getElementById('wifiSymbol');
+            const statusText = document.getElementById('statusText');
+            const ipAddress = document.getElementById('ipAddress');
+
+            statusIndicator.className = 'status-indicator';
+            wifiSymbol.className = 'fas';
+            wifiSymbol.style.animation = 'none';
+
+            switch(status) {
+                case 'connecting':
+                    statusIndicator.classList.add('connecting');
+                    wifiSymbol.classList.add('fa-sync-alt', 'wifi-connecting');
+                    wifiSymbol.style.animation = 'spin 1s linear infinite';
+                    statusText.textContent = 'Bağlantı kuruluyor...';
+                    ipAddress.textContent = '-';
+                    break;
+                    
+                case 'connected':
+                    statusIndicator.classList.add('connected');
+                    wifiSymbol.classList.add('fa-wifi', 'wifi-connected');
+                    statusText.textContent = 'Bağlandı';
+                    ipAddress.textContent = isIPHidden ? '••••••••••••' : ip;
+                    break;
+                    
+                case 'disconnected':
+                    statusIndicator.classList.add('disconnected');
+                    wifiSymbol.classList.add('fa-globe-americas', 'wifi-disconnected');
+                    statusText.textContent = 'Bağlantı Yok';
+                    ipAddress.textContent = 'İnternet bağlantısı yok';
+                    break;
+            }
+        }
+
+        function showIPChangeNotification(previousIP, newIP) {
+            const notification = document.getElementById('ipChangeNotification');
+            const previousIPDisplay = document.getElementById('previousIPDisplay');
+            const currentIPDisplay = document.getElementById('currentIPDisplay');
+            
+            previousIPDisplay.textContent = previousIP;
+            currentIPDisplay.textContent = newIP;
+            notification.classList.add('show');
+        }
+
+        function closeIPChangeNotification() {
+            const notification = document.getElementById('ipChangeNotification');
+            notification.classList.remove('show');
+        }
+
+        async function checkIPAndUpdate() {
+            if (ipCheckInProgress) return;
+            
+            ipCheckInProgress = true;
+            
+            try {
+                const newIP = await getIPAddress();
+                
+                if (newIP !== lastIP && lastIP !== '') {
+                    updateConnectionStatus('connecting');
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    showIPChangeNotification(lastIP, newIP);
+                }
+                
+                if (newIP !== lastIP) {
+                    currentIP = newIP;
+                    lastIP = newIP;
+                    updateConnectionStatus('connected', currentIP);
+                    isOnline = true;
+                    
+                    if (isInitialLoad) {
+                        isInitialLoad = false;
+                    }
+                } else {
+                    currentIP = newIP;
+                    if (isOnline) {
+                        updateConnectionStatus('connected', currentIP);
+                    }
+                }
+            } catch (error) {
+                if (isOnline || isInitialLoad) {
+                    updateConnectionStatus('disconnected');
+                }
+                isOnline = false;
+                
+                if (isInitialLoad) {
+                    isInitialLoad = false;
+                }
+            } finally {
+                ipCheckInProgress = false;
+            }
+        }
+
+        function toggleIPVisibility() {
+            isIPHidden = !isIPHidden;
+            
+            const eyeIcon = document.querySelector('.eye-icon');
+            const eyeSlashIcon = document.querySelector('.eye-slash-icon');
+            const toggleIpText = document.getElementById('toggleIpText');
+            
+            if (isIPHidden) {
+                eyeIcon.style.display = 'none';
+                eyeSlashIcon.style.display = 'block';
+                toggleIpText.textContent = 'Göster';
+            } else {
+                eyeIcon.style.display = 'block';
+                eyeSlashIcon.style.display = 'none';
+                toggleIpText.textContent = 'Gizle';
+            }
+            
+            if (isOnline) {
+                updateConnectionStatus('connected', currentIP);
+            }
+        }
+
+        function formatTokenForDisplay(token) {
+            if (token.length <= 20) return token;
+            const start = token.substring(0, 11);
+            const end = token.substring(token.length - 4);
+            return `${start}......${end}`;
+        }
+
+        function showStatusNotification(message, type) {
+            const notification = document.getElementById('statusNotification');
+            const statusText = document.getElementById('statusNotificationText');
+            const statusIcon = notification.querySelector('.status-icon');
+            
+            statusText.textContent = message;
+            statusIcon.className = 'status-icon';
+            
+            if (type === 'loading') {
+                statusIcon.classList.add('loading');
+                statusIcon.textContent = '⟳';
+                notification.style.borderLeftColor = '#0F2B76';
+            } else if (type === 'error') {
+                statusIcon.classList.add('error');
+                statusIcon.textContent = '!';
+                notification.style.borderLeftColor = '#dc2626';
+            } else if (type === 'success') {
+                statusIcon.classList.add('success');
+                statusIcon.textContent = '✓';
+                notification.style.borderLeftColor = '#16a34a';
+            }
+            
+            notification.classList.add('show');
+            
+            if (type !== 'loading') {
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 1900);
+            }
+        }
+
+        function hideStatusNotification() {
+            const notification = document.getElementById('statusNotification');
+            notification.classList.remove('show');
+        }
+
+        function checkAppInstalled(appScheme) {
+            return new Promise((resolve) => {
+                if (!isAndroidDevice()) {
+                    resolve(false);
+                    return;
+                }
+
+                if (appCheckInProgress) {
+                    resolve(false);
+                    return;
+                }
+
+                appCheckInProgress = true;
+
+                const timeout = setTimeout(() => {
+                    window.removeEventListener('blur', onBlur);
+                    appCheckInProgress = false;
+                    resolve(false);
+                }, 1000);
+
+                const onBlur = () => {
+                    clearTimeout(timeout);
+                    window.removeEventListener('blur', onBlur);
+                    appCheckInProgress = false;
+                    resolve(true);
+                };
+
+                window.addEventListener('blur', onBlur);
+
+                window.location.href = appScheme;
+            });
+        }
+
+        function showAppNotInstalledModal(appName, apkLink) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <div class="modal-title">
+                            <i class="fas fa-download"></i>
+                            Uygulama Gerekli
+                        </div>
+                    </div>
+                    <div class="modal-content">
+                        <div class="modal-text">
+                            <p><strong>${appName}</strong> uygulaması cihazınızda yüklü değil.</p>
+                            <p>Giriş yapabilmek için lütfen uygulamayı indirin ve kurun.</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="modal-btn modal-btn-cancel" onclick="closeAppModal()">
+                            <i class="fas fa-times"></i>
+                            İptal
+                        </button>
+                        <button class="modal-btn modal-btn-confirm" onclick="downloadAPK('${apkLink}')">
+                            <i class="fas fa-download"></i>
+                            İndir ve Kur
+                        </button>
+                    </div>
+                </div>
+            `;
+            modal.id = 'appModal';
+            document.body.appendChild(modal);
+        }
+
+        function closeAppModal() {
+            const modal = document.getElementById('appModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function downloadAPK(apkLink) {
+            window.open(apkLink, '_blank');
+            closeAppModal();
+        }
+
+        async function validateToken(token) {
+            try {
+                const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                return result.status === true;
+            } catch (error) {
+                throw new Error('Token doğrulama servisine ulaşılamadı');
+            }
+        }
+
+        function checkIPBeforeLogin() {
+            if (!isAndroidDevice()) {
+                const token = document.getElementById("token").value.trim();
+                let appName = "Kuppo";
+                
+                if (token.startsWith('yx-')) {
+                    appName = "Kuppo YS";
+                } else if (token.startsWith('ty-')) {
+                    appName = "TY GO";
+                }
+                
+                showIncompatibleDeviceWarning(appName);
+                return;
+            }
+            
+            const tokenInput = document.getElementById("token");
+            const token = tokenInput.value.trim();
+            
+            if (!token) {
+                showSystemNotification('Token girin', 'error');
+                return;
+            }
+            
+            if (!token.startsWith('yx-') && !token.startsWith('ty-')) {
+                showSystemNotification('Geçersiz token formatı: yx- veya ty- ile başlamalı', 'error');
+                return;
+            }
+            
+            if (tokenIPMap[token] === currentIP) {
+                uygulamayiAc(token);
+                return;
+            }
+            
+            const hasUsedSameIP = Object.values(tokenIPMap).some(storedIP => storedIP === currentIP);
+            
+            if (hasUsedSameIP && tokenIPMap[token] !== currentIP) {
+                pendingToken = token;
+                document.getElementById('ipWarningModal').classList.add('active');
+            } else {
+                uygulamayiAc(token);
+            }
+        }
+
+        function continueWithSameIP() {
+            const tokenToUse = pendingToken;
+            closeIPWarning();
+            if (tokenToUse) {
+                uygulamayiAc(tokenToUse);
+            }
+        }
+
+        function closeIPWarning() {
+            document.getElementById('ipWarningModal').classList.remove('active');
+            pendingToken = '';
+        }
+
+        async function uygulamayiAc(token) {
+            const button = document.querySelector('.giris-yap-btn');
+            const originalText = button.textContent;
+            button.disabled = true;
+            
+            showStatusNotification('Token kontrol ediliyor', 'loading');
+            
+            try {
+                const isValid = await validateToken(token);
+                
+                if (isValid) {
+                    hideStatusNotification();
+                    showSystemNotification('Token doğrulandı', 'success');
+                    
+                    let appScheme, appName, apkLink;
+                    
+                    if (token.startsWith('yx-')) {
+                        appScheme = 'kuppoys://';
+                        appName = 'Kuppo YS';
+                        apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
+                    } else if (token.startsWith('ty-')) {
+                        appScheme = 'kuppo://';
+                        appName = 'TY GO';
+                        apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
+                    }
+                    
+                    const isAppInstalled = await checkAppInstalled(appScheme);
+                    
+                    if (!isAppInstalled) {
+                        showAppNotInstalledModal(appName, apkLink);
+                        button.disabled = false;
+                        return;
+                    }
+                    
+                    tokenIPMap[token] = currentIP;
+                    localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
+                    
+                    addToHistory(token);
+                    
+                    button.textContent = "Uygulamaya Yönlendiriliyor...";
+                    button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
+                    
+                    let appLink;
+                    if (token.startsWith('yx-')) {
+                        appLink = `kuppoys://login?token=${token}`;
+                    } else if (token.startsWith('ty-')) {
+                        appLink = `kuppo://login?token=${token}`;
+                    }
+                    
+                    setTimeout(() => {
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = appLink;
+                        document.body.appendChild(iframe);
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(iframe);
+                            button.textContent = originalText;
+                            button.style.background = "linear-gradient(135deg, #0F2B76, #5A21B5)";
+                            button.disabled = false;
+                            document.getElementById('token').value = "";
+                            pendingToken = '';
+                        }, 1000);
+                    }, 500);
+                } else {
+                    hideStatusNotification();
+                    showSystemNotification('Geçersiz token', 'error');
+                    button.disabled = false;
+                }
+            } catch (error) {
+                hideStatusNotification();
+                showSystemNotification('API bağlantı hatası', 'error');
+                button.disabled = false;
+            }
+        }
+
+        async function addToHistory(token) {
+            try {
+                const existingIndex = tokenHistory.findIndex(item => item.token === token);
+                if (existingIndex !== -1) {
+                    tokenHistory.splice(existingIndex, 1);
+                }
+                
+                tokenHistory.unshift({
+                    token: token,
+                    date: new Date().toLocaleString('tr-TR'),
+                    ip: currentIP
+                });
+                
+                tokenHistory = tokenHistory.slice(0, 10);
+                localStorage.setItem('kuppoTokenHistory', JSON.stringify(tokenHistory));
+            } catch (error) {
+            }
+        }
+
+        async function loadHistory() {
+            const historyTokens = document.getElementById('historyTokens');
+            
+            if (tokenHistory.length > 0) {
+                historyTokens.innerHTML = '';
+                
+                for (const item of tokenHistory) {
+                    try {
+                        const tokenElement = document.createElement('div');
+                        tokenElement.className = 'history-token';
+                        
+                        const isCurrentIP = item.ip === currentIP;
+                        const ipDisplay = `IP: ${item.ip}${isCurrentIP ? ' <span class="current-ip"><i class="fas fa-location-dot"></i> Şu anki IP</span>' : ''}`;
+                        
+                        tokenElement.innerHTML = `
+                            <div class="token-info">
+                                <div class="token-text">${formatTokenForDisplay(item.token)}</div>
+                                <div class="token-details">
+                                    <span class="token-ip">${ipDisplay}</span>
+                                    <span class="token-date">${item.date}</span>
+                                </div>
+                            </div>
+                            <button class="use-token-btn">Kullan</button>
+                        `;
+                        
+                        tokenElement.querySelector('.use-token-btn').onclick = (e) => {
+                            e.stopPropagation();
+                            document.getElementById('token').value = item.token;
+                            closeBottomSheet();
+                            showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
+                        };
+                        
+                        tokenElement.onclick = () => {
+                            document.getElementById('token').value = item.token;
+                            closeBottomSheet();
+                            showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
+                        };
+                        
+                        historyTokens.appendChild(tokenElement);
+                    } catch (error) {
+                        continue;
+                    }
+                }
+            } else {
+                historyTokens.innerHTML = '<div class="no-history">Henüz token girişi yapılmamış</div>';
+            }
+        }
+
+        function openBottomSheet() {
+            loadHistory();
+            document.getElementById('bottomSheetOverlay').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('bottomSheet').classList.add('active');
+            }, 10);
+        }
+
+        function closeBottomSheet() {
+            document.getElementById('bottomSheet').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('bottomSheetOverlay').style.display = 'none';
+            }, 300);
+        }
+
+        function clearHistory() {
+            showSystemNotification('Geçmiş temizlendi', 'success');
+            tokenHistory = [];
+            tokenIPMap = {};
+            localStorage.removeItem('kuppoTokenHistory');
+            localStorage.removeItem('kuppoTokenIPMap');
+            loadHistory();
+            closeBottomSheet();
+        }
+
+        document.getElementById('bottomSheetOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBottomSheet();
+            }
+        });
+
+        document.getElementById('ipWarningModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeIPWarning();
+            }
+        });
+
+        document.getElementById('toggleIpBtn').addEventListener('click', toggleIPVisibility);
+
+        window.addEventListener('online', function() {
+            checkIPAndUpdate();
+        });
+
+        window.addEventListener('offline', function() {
+            updateConnectionStatus('disconnected');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeButtonProtection();
+            showDeviceWarning();
+            
+            updateConnectionStatus('connecting');
+            checkIPAndUpdate();
+            
+            connectionCheckInterval = setInterval(checkIPAndUpdate, 10000);
+            
+            const tokenInput = document.getElementById('token');
+            tokenInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkIPBeforeLogin();
+                }
+            });
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (connectionCheckInterval) {
+                clearInterval(connectionCheckInterval);
+            }
+        });
+    </script>
+</body>
+</html>
