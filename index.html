@@ -1119,7 +1119,7 @@
                     </button>
                 </div>
             </div>
-            <button class="giris-yap-btn" onclick="checkIPBeforeLogin()">Giriş Yap</button>
+            <button class="giris-yap-btn" onclick="handleInitialGesture()">Giriş Yap</button>
             <div class="history-section">
                 <div class="history-btn" onclick="openBottomSheet()">
                     <svg class="history-icon" viewBox="0 0 24 24">
@@ -1250,10 +1250,9 @@
         let lastIP = '';
         let isInitialLoad = true;
         let ipCheckInProgress = false;
-        let appCheckInProgress = false;
 
-        let validatedToken = null;
-        let validatedAppScheme = null;
+        let launchData = null;
+        let isValidationComplete = false;
 
         function isAndroidDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -1541,84 +1540,6 @@
             notification.classList.remove('show');
         }
 
-        function checkAppInstalled(appScheme) {
-            return new Promise((resolve) => {
-                if (!isAndroidDevice()) {
-                    resolve(false);
-                    return;
-                }
-
-                if (appCheckInProgress) {
-                    resolve(false);
-                    return;
-                }
-
-                appCheckInProgress = true;
-
-                const timeout = setTimeout(() => {
-                    window.removeEventListener('blur', onBlur);
-                    appCheckInProgress = false;
-                    resolve(false);
-                }, 1000);
-
-                const onBlur = () => {
-                    clearTimeout(timeout);
-                    window.removeEventListener('blur', onBlur);
-                    appCheckInProgress = false;
-                    resolve(true);
-                };
-
-                window.addEventListener('blur', onBlur);
-
-                window.location.href = appScheme;
-            });
-        }
-
-        function showAppNotInstalledModal(appName, apkLink) {
-            const modal = document.createElement('div');
-            modal.className = 'modal-overlay active';
-            modal.innerHTML = `
-                <div class="modal">
-                    <div class="modal-header">
-                        <div class="modal-title">
-                            <i class="fas fa-download"></i>
-                            Uygulama Gerekli
-                        </div>
-                    </div>
-                    <div class="modal-content">
-                        <div class="modal-text">
-                            <p><strong>${appName}</strong> uygulaması cihazınızda yüklü değil.</p>
-                            <p>Giriş yapabilmek için lütfen uygulamayı indirin ve kurun.</p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="modal-btn modal-btn-cancel" onclick="closeAppModal()">
-                            <i class="fas fa-times"></i>
-                            İptal
-                        </button>
-                        <button class="modal-btn modal-btn-confirm" onclick="downloadAPK('${apkLink}')">
-                            <i class="fas fa-download"></i>
-                            İndir ve Kur
-                        </button>
-                    </div>
-                </div>
-            `;
-            modal.id = 'appModal';
-            document.body.appendChild(modal);
-        }
-
-        function closeAppModal() {
-            const modal = document.getElementById('appModal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        function downloadAPK(apkLink) {
-            window.open(apkLink, '_blank');
-            closeAppModal();
-        }
-
         async function validateToken(token) {
             try {
                 const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
@@ -1661,7 +1582,7 @@
             }
             
             if (tokenIPMap[token] === currentIP) {
-                uygulamayiAc(token);
+                startValidationProcess(token);
                 return;
             }
             
@@ -1671,7 +1592,7 @@
                 pendingToken = token;
                 document.getElementById('ipWarningModal').classList.add('active');
             } else {
-                uygulamayiAc(token);
+                startValidationProcess(token);
             }
         }
 
@@ -1679,7 +1600,7 @@
             const tokenToUse = pendingToken;
             closeIPWarning();
             if (tokenToUse) {
-                uygulamayiAc(tokenToUse);
+                startValidationProcess(tokenToUse);
             }
         }
 
@@ -1688,7 +1609,7 @@
             pendingToken = '';
         }
 
-        async function uygulamayiAc(token) {
+        async function startValidationProcess(token) {
             const button = document.querySelector('.giris-yap-btn');
             const originalText = button.textContent;
             button.disabled = true;
@@ -1714,62 +1635,24 @@
                         apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
                     }
                     
-                    const isAppInstalled = await checkAppInstalled(appScheme);
-                    
-                    if (!isAppInstalled) {
-                        showAppNotInstalledModal(appName, apkLink);
-                        button.disabled = false;
-                        return;
-                    }
-                    
                     tokenIPMap[token] = currentIP;
                     localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
-                    
                     addToHistory(token);
                     
-                    button.textContent = "Uygulamaya Yönlendiriliyor...";
-                    button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
-                    
-                    validatedToken = token;
-                    validatedAppScheme = appScheme;
-                    
-                    const openAppButton = document.createElement('button');
-                    openAppButton.textContent = "Uygulamayı Aç";
-                    openAppButton.style.cssText = `
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        opacity: 0;
-                        cursor: pointer;
-                        z-index: 10000;
-                    `;
-                    openAppButton.onclick = function() {
-                        let appLink;
-                        if (validatedToken.startsWith('yx-')) {
-                            appLink = `kuppoys://login?token=${validatedToken}`;
-                        } else if (validatedToken.startsWith('ty-')) {
-                            appLink = `kuppo://login?token=${validatedToken}`;
-                        }
-                        
-                        window.location.href = appLink;
-                        document.body.removeChild(this);
-                        
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                            button.style.background = "linear-gradient(135deg, #0F2B76, #5A21B5)";
-                            button.disabled = false;
-                            document.getElementById('token').value = "";
-                            pendingToken = '';
-                        }, 3000);
+                    launchData = {
+                        token: token,
+                        appScheme: appScheme,
+                        appName: appName,
+                        apkLink: apkLink
                     };
                     
-                    document.body.appendChild(openAppButton);
+                    isValidationComplete = true;
                     
-                    setTimeout(() => {
-                        openAppButton.click();
-                    }, 100);
+                    button.textContent = "Uygulamayı Aç";
+                    button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
+                    button.disabled = false;
+                    
+                    showSystemNotification('Uygulamayı açmak için butona tekrar tıklayın', 'info');
                     
                 } else {
                     hideStatusNotification();
@@ -1781,6 +1664,51 @@
                 showSystemNotification('API bağlantı hatası', 'error');
                 button.disabled = false;
             }
+        }
+
+        function handleInitialGesture() {
+            if (isValidationComplete && launchData) {
+                launchAppInGestureContext();
+            } else {
+                checkIPBeforeLogin();
+            }
+        }
+
+        function launchAppInGestureContext() {
+            if (!launchData) return;
+            
+            const button = document.querySelector('.giris-yap-btn');
+            const originalText = button.textContent;
+            
+            button.disabled = true;
+            button.textContent = "Uygulama Açılıyor...";
+            
+            let appLink;
+            if (launchData.token.startsWith('yx-')) {
+                appLink = `kuppoys://login?token=${launchData.token}`;
+            } else if (launchData.token.startsWith('ty-')) {
+                appLink = `kuppo://login?token=${launchData.token}`;
+            }
+            
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = appLink;
+            document.body.appendChild(iframe);
+            
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+                
+                setTimeout(() => {
+                    button.textContent = "Giriş Yap";
+                    button.style.background = "linear-gradient(135deg, #0F2B76, #5A21B5)";
+                    button.disabled = false;
+                    document.getElementById('token').value = "";
+                    
+                    launchData = null;
+                    isValidationComplete = false;
+                    pendingToken = '';
+                }, 1000);
+            }, 100);
         }
 
         async function addToHistory(token) {
@@ -1909,7 +1837,7 @@
             const tokenInput = document.getElementById('token');
             tokenInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    checkIPBeforeLogin();
+                    handleInitialGesture();
                 }
             });
         });
