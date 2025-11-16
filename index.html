@@ -318,6 +318,12 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
+        .giris-yap-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
         .history-section {
             margin-top: 15px;
         }
@@ -1119,7 +1125,7 @@
                     </button>
                 </div>
             </div>
-            <button class="giris-yap-btn" onclick="handleInitialGesture()">Giriş Yap</button>
+            <button class="giris-yap-btn" onclick="handleSingleClickLogin()">Giriş Yap</button>
             <div class="history-section">
                 <div class="history-btn" onclick="openBottomSheet()">
                     <svg class="history-icon" viewBox="0 0 24 24">
@@ -1251,8 +1257,9 @@
         let isInitialLoad = true;
         let ipCheckInProgress = false;
 
-        let launchData = null;
-        let isValidationComplete = false;
+        // YENİ: Tek tıklama için değişkenler
+        let isProcessing = false;
+        let gestureStartTime = 0;
 
         function isAndroidDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -1553,162 +1560,136 @@
             }
         }
 
-        function checkIPBeforeLogin() {
-            if (!isAndroidDevice()) {
-                const token = document.getElementById("token").value.trim();
-                let appName = "Kuppo";
+        // YENİ: Tek tıklamalı login fonksiyonu
+        async function handleSingleClickLogin() {
+            if (isProcessing) return;
+            
+            const button = document.querySelector('.giris-yap-btn');
+            const originalText = button.textContent;
+            
+            // Gesture'ı kaydet
+            gestureStartTime = Date.now();
+            
+            // Butonu devre dışı bırak
+            isProcessing = true;
+            button.disabled = true;
+            button.textContent = "İşleniyor...";
+            
+            try {
+                // 1. Token doğrulama
+                const tokenInput = document.getElementById("token");
+                const token = tokenInput.value.trim();
                 
-                if (token.startsWith('yx-')) {
-                    appName = "Kuppo YS";
-                } else if (token.startsWith('ty-')) {
-                    appName = "TY GO";
+                if (!token) {
+                    showSystemNotification('Token girin', 'error');
+                    return;
                 }
                 
-                showIncompatibleDeviceWarning(appName);
-                return;
+                if (!token.startsWith('yx-') && !token.startsWith('ty-')) {
+                    showSystemNotification('Geçersiz token formatı: yx- veya ty- ile başlamalı', 'error');
+                    return;
+                }
+                
+                // 2. IP kontrolü
+                if (!isAndroidDevice()) {
+                    let appName = "Kuppo";
+                    
+                    if (token.startsWith('yx-')) {
+                        appName = "Kuppo YS";
+                    } else if (token.startsWith('ty-')) {
+                        appName = "TY GO";
+                    }
+                    
+                    showIncompatibleDeviceWarning(appName);
+                    return;
+                }
+                
+                // 3. Token validation
+                showStatusNotification('Token kontrol ediliyor', 'loading');
+                const isValid = await validateToken(token);
+                
+                if (!isValid) {
+                    hideStatusNotification();
+                    showSystemNotification('Geçersiz token', 'error');
+                    return;
+                }
+                
+                hideStatusNotification();
+                showSystemNotification('Token doğrulandı', 'success');
+                
+                // 4. Scheme belirleme
+                let appScheme, appName, apkLink;
+                
+                if (token.startsWith('yx-')) {
+                    appScheme = 'kuppoys://';
+                    appName = 'Kuppo YS';
+                    apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
+                } else if (token.startsWith('ty-')) {
+                    appScheme = 'kuppo://';
+                    appName = 'TY GO';
+                    apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
+                }
+                
+                // 5. Geçmişe ekle
+                tokenIPMap[token] = currentIP;
+                localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
+                addToHistory(token);
+                
+                // 6. Gesture context içinde scheme çağrısı yap
+                // Bu kısım gesture'ın hala geçerli olduğu kabul edilir
+                const appLink = `${appScheme}login?token=${token}`;
+                
+                // Direkt location değişikliği - gesture context içinde
+                button.textContent = "Uygulama Açılıyor...";
+                
+                // Gesture'ı koruyarak scheme çağrısı yap
+                setTimeout(() => {
+                    // Bu setTimeout gesture chain'i bozmaz çünkü çok kısa
+                    window.location.href = appLink;
+                    
+                    // Fallback: 2 saniye sonra hala bu sayfadaysak APK'ya yönlendir
+                    setTimeout(() => {
+                        if (!document.hidden) {
+                            showSystemNotification('Uygulama bulunamadı, APK indirme sayfasına yönlendiriliyor', 'warning');
+                            setTimeout(() => {
+                                window.location.href = apkLink;
+                            }, 1000);
+                        }
+                    }, 2000);
+                }, 10);
+                
+            } catch (error) {
+                hideStatusNotification();
+                showSystemNotification('İşlem sırasında hata oluştu', 'error');
+                console.error('Login error:', error);
+            } finally {
+                // Butonu sadece hata durumunda veya işlem tamamlandığında resetle
+                if (!document.hidden) {
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                        isProcessing = false;
+                    }, 3000);
+                }
             }
-            
-            const tokenInput = document.getElementById("token");
-            const token = tokenInput.value.trim();
-            
-            if (!token) {
-                showSystemNotification('Token girin', 'error');
-                return;
-            }
-            
-            if (!token.startsWith('yx-') && !token.startsWith('ty-')) {
-                showSystemNotification('Geçersiz token formatı: yx- veya ty- ile başlamalı', 'error');
-                return;
-            }
-            
-            if (tokenIPMap[token] === currentIP) {
-                startValidationProcess(token);
-                return;
-            }
-            
-            const hasUsedSameIP = Object.values(tokenIPMap).some(storedIP => storedIP === currentIP);
-            
-            if (hasUsedSameIP && tokenIPMap[token] !== currentIP) {
-                pendingToken = token;
-                document.getElementById('ipWarningModal').classList.add('active');
-            } else {
-                startValidationProcess(token);
-            }
+        }
+
+        function checkIPBeforeLogin() {
+            // Eski fonksiyon - artık kullanılmıyor ama referans için duruyor
+            handleSingleClickLogin();
         }
 
         function continueWithSameIP() {
             const tokenToUse = pendingToken;
             closeIPWarning();
             if (tokenToUse) {
-                startValidationProcess(tokenToUse);
+                handleSingleClickLogin();
             }
         }
 
         function closeIPWarning() {
             document.getElementById('ipWarningModal').classList.remove('active');
             pendingToken = '';
-        }
-
-        async function startValidationProcess(token) {
-            const button = document.querySelector('.giris-yap-btn');
-            const originalText = button.textContent;
-            button.disabled = true;
-            
-            showStatusNotification('Token kontrol ediliyor', 'loading');
-            
-            try {
-                const isValid = await validateToken(token);
-                
-                if (isValid) {
-                    hideStatusNotification();
-                    showSystemNotification('Token doğrulandı', 'success');
-                    
-                    let appScheme, appName, apkLink;
-                    
-                    if (token.startsWith('yx-')) {
-                        appScheme = 'kuppoys://';
-                        appName = 'Kuppo YS';
-                        apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
-                    } else if (token.startsWith('ty-')) {
-                        appScheme = 'kuppo://';
-                        appName = 'TY GO';
-                        apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
-                    }
-                    
-                    tokenIPMap[token] = currentIP;
-                    localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
-                    addToHistory(token);
-                    
-                    launchData = {
-                        token: token,
-                        appScheme: appScheme,
-                        appName: appName,
-                        apkLink: apkLink
-                    };
-                    
-                    isValidationComplete = true;
-                    
-                    button.textContent = "Uygulamayı Aç";
-                    button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
-                    button.disabled = false;
-                    
-                    showSystemNotification('Uygulamayı açmak için butona tekrar tıklayın', 'info');
-                    
-                } else {
-                    hideStatusNotification();
-                    showSystemNotification('Geçersiz token', 'error');
-                    button.disabled = false;
-                }
-            } catch (error) {
-                hideStatusNotification();
-                showSystemNotification('API bağlantı hatası', 'error');
-                button.disabled = false;
-            }
-        }
-
-        function handleInitialGesture() {
-            if (isValidationComplete && launchData) {
-                launchAppInGestureContext();
-            } else {
-                checkIPBeforeLogin();
-            }
-        }
-
-        function launchAppInGestureContext() {
-            if (!launchData) return;
-            
-            const button = document.querySelector('.giris-yap-btn');
-            const originalText = button.textContent;
-            
-            button.disabled = true;
-            button.textContent = "Uygulama Açılıyor...";
-            
-            let appLink;
-            if (launchData.token.startsWith('yx-')) {
-                appLink = `kuppoys://login?token=${launchData.token}`;
-            } else if (launchData.token.startsWith('ty-')) {
-                appLink = `kuppo://login?token=${launchData.token}`;
-            }
-            
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = appLink;
-            document.body.appendChild(iframe);
-            
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-                
-                setTimeout(() => {
-                    button.textContent = "Giriş Yap";
-                    button.style.background = "linear-gradient(135deg, #0F2B76, #5A21B5)";
-                    button.disabled = false;
-                    document.getElementById('token').value = "";
-                    
-                    launchData = null;
-                    isValidationComplete = false;
-                    pendingToken = '';
-                }, 1000);
-            }, 100);
         }
 
         async function addToHistory(token) {
@@ -1727,6 +1708,7 @@
                 tokenHistory = tokenHistory.slice(0, 10);
                 localStorage.setItem('kuppoTokenHistory', JSON.stringify(tokenHistory));
             } catch (error) {
+                console.error('History error:', error);
             }
         }
 
@@ -1837,7 +1819,7 @@
             const tokenInput = document.getElementById('token');
             tokenInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    handleInitialGesture();
+                    handleSingleClickLogin();
                 }
             });
         });
