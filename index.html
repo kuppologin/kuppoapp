@@ -1386,6 +1386,8 @@
         let isProcessing = false;
         let gestureStartTime = 0;
         let currentAppData = null;
+        let appCheckTimeout = null;
+        let visibilityChangeHandler = null;
 
         function isAndroidDevice() {
             const userAgent = navigator.userAgent.toLowerCase();
@@ -1675,7 +1677,6 @@
 
         // YENİ: Basitleştirilmiş uygulama kontrolü
         async function checkAppInstalledSimple(appScheme, appName, apkLink) {
-            // Artık karmaşık kontrol yapmıyoruz, hemen true döndürüyoruz
             return true;
         }
 
@@ -1722,18 +1723,51 @@
             }
         }
 
+        // YENİ: Akıllı uygulama kontrol timeout'u
+        function setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput) {
+            // Önceki timeout'u temizle
+            if (appCheckTimeout) {
+                clearTimeout(appCheckTimeout);
+            }
+            
+            // Önceki event listener'ı temizle
+            if (visibilityChangeHandler) {
+                document.removeEventListener('visibilitychange', visibilityChangeHandler);
+            }
+            
+            appCheckTimeout = setTimeout(() => {
+                // Eğer sayfa hala görünür durumdaysa (yani uygulama açılmamışsa)
+                if (document.visibilityState === 'visible') {
+                    showAppNotInstalledModal(appName, apkLink);
+                    resetButton(button, originalText);
+                    tokenInput.value = "";
+                }
+            }, 2000);
+
+            // Yeni event listener oluştur
+            visibilityChangeHandler = () => {
+                if (document.visibilityState === 'hidden') {
+                    // Uygulama açıldı, timeout'u temizle
+                    clearTimeout(appCheckTimeout);
+                }
+            };
+
+            document.addEventListener('visibilitychange', visibilityChangeHandler);
+        }
+
         // YENİ: Optimize edilmiş tek tıklamalı login fonksiyonu
         async function handleSingleClickLogin() {
             if (isProcessing) return;
             
             const button = document.querySelector('.giris-yap-btn');
             const originalText = button.textContent;
+            const originalBackground = button.style.background;
             
             // Gesture context'i başlat
             gestureStartTime = Date.now();
             isProcessing = true;
             button.disabled = true;
-            button.textContent = "Token kontrol ediliyor...";
+            button.style.background = '#6c757d'; // Gri renk
 
             try {
                 // 1. Token al
@@ -1752,7 +1786,7 @@
                 if (!isAndroidDevice()) {
                     let appName = token.startsWith('yx-') ? "Kuppo YS" : "TY GO";
                     showIncompatibleDeviceWarning(appName);
-                    resetButton(button, originalText);
+                    resetButton(button, originalText, originalBackground);
                     return;
                 }
                 
@@ -1779,8 +1813,9 @@
                     apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
                 }
 
-                // 5. Uygulama kontrolünü atla ve hemen uygulamayı aç
-                button.textContent = "Uygulamaya yönlendiriliyor...";
+                // 5. Butonu yeşil yap ve yazıyı değiştir
+                button.textContent = "Uygulamaya Yönlendiriliyor...";
+                button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
                 
                 // Geçmişe ekle
                 await addToHistory(token);
@@ -1805,28 +1840,32 @@
                     }, 1000);
                 }, 50);
                 
-                // 6. Eğer 2 saniye içinde uygulama açılmazsa, modal göster
-                setTimeout(() => {
-                    // Eğer hala bu sayfadaysak, uygulama açılmamış demektir
-                    if (!document.hidden) {
-                        showAppNotInstalledModal(appName, apkLink);
-                        resetButton(button, originalText);
-                        tokenInput.value = "";
-                    }
-                }, 2000);
+                // 6. Akıllı uygulama kontrol timeout'u
+                setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
                 
             } catch (error) {
                 hideStatusNotification();
                 showSystemNotification(error.message, 'error');
-                resetButton(button, originalText);
+                resetButton(button, originalText, originalBackground);
             }
         }
 
         // Buton reset fonksiyonu
-        function resetButton(button, originalText) {
+        function resetButton(button, originalText, originalBackground) {
             button.textContent = originalText;
+            button.style.background = originalBackground;
             button.disabled = false;
             isProcessing = false;
+            
+            // Timeout ve event listener'ı temizle
+            if (appCheckTimeout) {
+                clearTimeout(appCheckTimeout);
+                appCheckTimeout = null;
+            }
+            if (visibilityChangeHandler) {
+                document.removeEventListener('visibilitychange', visibilityChangeHandler);
+                visibilityChangeHandler = null;
+            }
         }
 
         function continueWithSameIP() {
