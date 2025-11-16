@@ -997,6 +997,7 @@
             font-weight: 500;
             word-break: break-word;
         }
+        /* YENİ: Uygulama Yüklü Değil Modal */
         .app-not-installed-modal {
             position: fixed;
             top: 0;
@@ -1241,7 +1242,6 @@
         </div>
     </div>
 
-    <!-- Bottom Sheet for History -->
     <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
         <div class="bottom-sheet" id="bottomSheet">
             <div class="bottom-sheet-header">
@@ -1264,7 +1264,6 @@
         </div>
     </div>
 
-    <!-- IP Change Notification -->
     <div class="ip-change-notification" id="ipChangeNotification">
         <div class="ip-change-header">
             <div class="ip-change-title">
@@ -1291,7 +1290,6 @@
         </div>
     </div>
 
-    <!-- Device Warning Modal -->
     <div class="device-warning-overlay" id="deviceWarningOverlay">
         <div class="device-warning-modal">
             <div class="device-warning-header">
@@ -1312,7 +1310,7 @@
         </div>
     </div>
 
-    <!-- App Not Installed Modal -->
+    <!-- YENİ: Uygulama Yüklü Değil Modal -->
     <div class="app-not-installed-modal" id="appNotInstalledModal">
         <div class="app-not-installed-content">
             <div class="app-not-installed-header">
@@ -1340,7 +1338,6 @@
         </div>
     </div>
 
-    <!-- IP Warning Modal -->
     <div class="modal-overlay" id="ipWarningModal">
         <div class="modal">
             <div class="modal-header">
@@ -1358,7 +1355,6 @@
         </div>
     </div>
 
-    <!-- Notifications -->
     <div class="system-notification" id="systemNotification">
         <div class="system-notification-icon info">!</div>
         <div class="system-notification-text" id="systemNotificationText">Mesaj burada gösterilecek</div>
@@ -1679,43 +1675,50 @@
             notification.classList.remove('show');
         }
 
-        // YENİ: Uygulama kontrol fonksiyonu
-        async function checkAppInstalled(packageName) {
+        // YENİ: Basit uygulama kontrolü - sadece scheme denemesi
+        async function checkAppInstalled(appScheme, appName, apkLink) {
             return new Promise((resolve) => {
-                if (!isAndroidDevice()) {
-                    resolve(false);
-                    return;
-                }
+                let appChecked = false;
+                
+                // 1.5 saniye içinde uygulama açılırsa blur event'i tetiklenir
+                const timeout = setTimeout(() => {
+                    if (!appChecked) {
+                        appChecked = true;
+                        resolve(false); // Uygulama yüklü değil
+                    }
+                }, 1500);
 
-                let appResolved = false;
-                const timeoutDuration = 2000; // 2 saniye
-
-                const resolveAppCheck = (result) => {
-                    if (!appResolved) {
-                        appResolved = true;
-                        clearTimeout(timeoutId);
-                        window.removeEventListener('blur', onBlur);
-                        if (iframe.parentNode) {
-                            document.body.removeChild(iframe);
-                        }
-                        resolve(result);
+                // Uygulama açılırsa sayfa blur olur
+                const onBlur = () => {
+                    if (!appChecked) {
+                        appChecked = true;
+                        clearTimeout(timeout);
+                        resolve(true); // Uygulama yüklü ve açıldı
                     }
                 };
 
-                const onBlur = () => {
-                    resolveAppCheck(true);
-                };
+                window.addEventListener('blur', onBlur, { once: true });
 
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = `intent://#Intent;package=${packageName};end`;
-                
-                window.addEventListener('blur', onBlur);
-                document.body.appendChild(iframe);
+                // Scheme'i deneyelim
+                const testLink = `${appScheme}test`;
+                window.location.href = testLink;
 
-                const timeoutId = setTimeout(() => {
-                    resolveAppCheck(false);
-                }, timeoutDuration);
+                // Eğer 100ms içinde hala bu sayfadaysak, scheme çalışmamış demektir
+                setTimeout(() => {
+                    if (!appChecked) {
+                        // Fallback: iframe ile deneyelim
+                        const iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        iframe.src = appScheme;
+                        document.body.appendChild(iframe);
+                        
+                        setTimeout(() => {
+                            if (!appChecked && iframe.parentNode) {
+                                document.body.removeChild(iframe);
+                            }
+                        }, 1000);
+                    }
+                }, 100);
             });
         }
 
@@ -1796,18 +1799,7 @@
                     return;
                 }
                 
-                // 3. IP kontrolü
-                if (tokenIPMap[token] && tokenIPMap[token] !== currentIP) {
-                    const hasUsedSameIP = Object.values(tokenIPMap).some(ip => ip === currentIP);
-                    if (hasUsedSameIP) {
-                        pendingToken = token;
-                        document.getElementById('ipWarningModal').classList.add('active');
-                        resetButton(button, originalText, originalBackground);
-                        return;
-                    }
-                }
-                
-                // 4. Token validation
+                // 3. Token validation
                 button.textContent = "Token kontrol ediliyor...";
                 showStatusNotification('Token kontrol ediliyor', 'loading');
                 
@@ -1823,22 +1815,23 @@
                 hideStatusNotification();
                 showSystemNotification('Token doğrulandı', 'success');
                 
-                // 5. Uygulama kontrolü
-                button.textContent = "Uygulama kontrol ediliyor...";
-                showStatusNotification('Uygulama kontrol ediliyor', 'loading');
-
-                let packageName, appName, apkLink;
+                // 4. Uygulama bilgilerini belirle
+                let appScheme, appName, apkLink;
                 if (token.startsWith('yx-')) {
-                    packageName = 'com.inovel.app.yemeksepeti.clone';
+                    appScheme = 'kuppoys://';
                     appName = 'Kuppo YS';
                     apkLink = 'https://sunucu.kuppo.net/files/kuppo_ys_v2.apk';
                 } else if (token.startsWith('ty-')) {
-                    packageName = 'com.trendyol.go.clone';
+                    appScheme = 'kuppo://';
                     appName = 'TY GO';
                     apkLink = 'https://sunucu.kuppo.net/files/TY%20GO%20V2.apk';
                 }
 
-                const isAppInstalled = await checkAppInstalled(packageName);
+                // 5. Uygulama kontrolü
+                button.textContent = "Uygulama kontrol ediliyor...";
+                showStatusNotification('Uygulama kontrol ediliyor', 'loading');
+
+                const isAppInstalled = await checkAppInstalled(appScheme, appName, apkLink);
                 hideStatusNotification();
 
                 if (!isAppInstalled) {
@@ -1856,31 +1849,17 @@
                 button.textContent = "Uygulamaya yönlendiriliyor...";
                 button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
                 
-                const appScheme = token.startsWith('yx-') ? 'kuppoys://' : 'kuppo://';
                 const appLink = `${appScheme}login?token=${encodeURIComponent(token)}`;
                 
                 // Gesture context içinde scheme çağrısı yap
                 setTimeout(() => {
                     window.location.href = appLink;
-                    
-                    // Geliştirilmiş fallback mekanizması
-                    setTimeout(() => {
-                        if (!document.hidden) {
-                            showSystemNotification('Uygulama açılamadı, indirme sayfasına yönlendiriliyor', 'warning');
-                            setTimeout(() => {
-                                window.location.href = apkLink;
-                            }, 1500);
-                        }
-                    }, 2000);
                 }, 100);
                 
                 // Butonu 3 saniye sonra resetle
                 setTimeout(() => {
-                    if (document.hidden) {
-                        // Kullanıcı uygulamaya geçti, sayfayı temizle
-                        document.getElementById('token').value = "";
-                    }
                     resetButton(button, originalText, originalBackground);
+                    document.getElementById('token').value = "";
                 }, 3000);
                 
             } catch (error) {
