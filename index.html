@@ -1707,13 +1707,14 @@
             document.getElementById('ipWarningModal').classList.add('active');
         }
 
-        // YENİ: IP uyarı modal'ını kapat
+        // YENİ: Düzeltilmiş IP uyarı modal'ını kapat - İPTAL DURUMU
         function closeIPWarning() {
             document.getElementById('ipWarningModal').classList.remove('active');
             pendingToken = '';
+            // İptal durumunda token input'u TEMİZLENMEZ - olduğu gibi kalır
         }
 
-        // YENİ: Geliştirilmiş continueWithSameIP fonksiyonu - blur+focus mekanizması ile
+        // YENİ: Düzeltilmiş continueWithSameIP fonksiyonu - blur+focus mekanizması ile
         function continueWithSameIP() {
             const tokenToUse = pendingToken;
             closeIPWarning();
@@ -1750,7 +1751,7 @@
                 tokenIPMap[tokenToUse] = currentIP;
                 localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
 
-                // YENİ: Aynı blur+focus mekanizmasını başlat (TOKEN TEMİZLEME YOK!)
+                // YENİ: Aynı blur+focus mekanizmasını başlat
                 setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
             }
         }
@@ -1834,7 +1835,7 @@
                     if (timeSinceBlur > 1000) {
                         clearTimeout(appCheckTimeout);
                         // Butonu resetle ve token input'unu temizle
-                        resetButton(button, originalText, tokenInput);
+                        resetButtonAndClearToken(button, originalText, tokenInput);
                     }
                 }
             };
@@ -1846,14 +1847,63 @@
             appCheckTimeout = setTimeout(() => {
                 if (!appOpened) {
                     showAppNotInstalledModal(appName, apkLink);
-                    resetButton(button, originalText, tokenInput);
+                    resetButtonAndClearToken(button, originalText, tokenInput);
                 }
             }, 2000);
             
             return appCheckTimeout;
         }
 
-        // YENİ: Optimize edilmiş tek tıklamalı login fonksiyonu
+        // YENİ: Düzeltilmiş buton reset fonksiyonu - TOKEN INPUT TEMİZLEME ARTIK BURADA!
+        function resetButtonAndClearToken(button, originalText, tokenInput) {
+            button.textContent = originalText;
+            button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
+            button.disabled = false;
+            isProcessing = false;
+            
+            // YENİ: Token input'unu temizle - ARTIK SADECE BURADA!
+            tokenInput.value = '';
+            
+            // Timeout ve event listener'ları temizle
+            if (appCheckTimeout) {
+                clearTimeout(appCheckTimeout);
+                appCheckTimeout = null;
+            }
+            if (blurHandler) {
+                window.removeEventListener('blur', blurHandler);
+                blurHandler = null;
+            }
+            if (focusHandler) {
+                window.removeEventListener('focus', focusHandler);
+                focusHandler = null;
+            }
+        }
+
+        // YENİ: Eski resetButton fonksiyonu - token temizleme YOK (sadece hata durumları için)
+        function resetButton(button, originalText, tokenInput) {
+            button.textContent = originalText;
+            button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
+            button.disabled = false;
+            isProcessing = false;
+            
+            // YENİ: Token input'u burada temizlenmiyor!
+            
+            // Timeout ve event listener'ları temizle
+            if (appCheckTimeout) {
+                clearTimeout(appCheckTimeout);
+                appCheckTimeout = null;
+            }
+            if (blurHandler) {
+                window.removeEventListener('blur', blurHandler);
+                blurHandler = null;
+            }
+            if (focusHandler) {
+                window.removeEventListener('focus', focusHandler);
+                focusHandler = null;
+            }
+        }
+
+        // YENİ: DÜZELTİLMİŞ handleSingleClickLogin - IP modalında resetButton KALDIRILDI
         async function handleSingleClickLogin() {
             if (isProcessing) return;
             
@@ -1901,11 +1951,16 @@
                 // 4. DÜZELTİLMİŞ AKILLI IP KONTROLÜ
                 console.log('IP Kontrolü başlatılıyor...');
                 if (!checkIPForDifferentToken(token)) {
-                    // Modal göster ve işlemi durdur
+                    // Modal göster ve işlemi durdur - AMA RESET BUTON ÇAĞRISI YOK!
                     console.log('IP Uyarı Modalı gösteriliyor');
                     pendingToken = token;
                     showIPWarningModal();
-                    resetButton(button, originalText, tokenInput);
+                    
+                    // YENİ: Sadece butonu resetle, token input'unu TEMİZLEME!
+                    button.textContent = originalText;
+                    button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
+                    button.disabled = false;
+                    isProcessing = false;
                     return;
                 }
 
@@ -1939,31 +1994,6 @@
                 hideStatusNotification();
                 showSystemNotification(error.message, 'error');
                 resetButton(button, originalText, tokenInput);
-            }
-        }
-
-        // YENİ: Geliştirilmiş buton reset fonksiyonu - TOKEN INPUT TEMİZLEME BURADA!
-        function resetButton(button, originalText, tokenInput) {
-            button.textContent = originalText;
-            button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
-            button.disabled = false;
-            isProcessing = false;
-            
-            // YENİ: Token input'unu temizle - SADECE BUTON RESETLENDİĞİNDE!
-            tokenInput.value = '';
-            
-            // Timeout ve event listener'ları temizle
-            if (appCheckTimeout) {
-                clearTimeout(appCheckTimeout);
-                appCheckTimeout = null;
-            }
-            if (blurHandler) {
-                window.removeEventListener('blur', blurHandler);
-                blurHandler = null;
-            }
-            if (focusHandler) {
-                window.removeEventListener('focus', focusHandler);
-                focusHandler = null;
             }
         }
 
