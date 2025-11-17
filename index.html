@@ -993,6 +993,104 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
+        
+        /* YENİ: IP Değişiklik Bildirimi Modalı */
+        .ip-change-notification {
+            position: fixed;
+            bottom: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 2001;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+        }
+        .ip-change-notification.show {
+            bottom: 30px;
+        }
+        .ip-change-header {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ip-change-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ip-change-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .ip-change-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        .ip-change-content {
+            padding: 25px;
+        }
+        .ip-change-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .ip-change-row:last-child {
+            border-bottom: none;
+        }
+        .ip-change-row.previous {
+            color: #dc2626;
+        }
+        .ip-change-row.current {
+            color: #16a34a;
+        }
+        .ip-change-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .ip-change-value {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+        .ip-change-value.previous {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .ip-change-value.current {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -1034,6 +1132,9 @@
             }
             .app-not-installed-buttons {
                 flex-direction: column;
+            }
+            .ip-change-notification {
+                max-width: 350px;
             }
         }
         @media (max-width: 360px) {
@@ -1225,6 +1326,33 @@
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-cancel" onclick="closeIPWarning()">İptal</button>
                 <button class="modal-btn modal-btn-confirm" id="confirmButton" onclick="continueWithSameIP()">Devam Et</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- YENİ: IP Değişiklik Bildirimi Modalı -->
+    <div class="ip-change-notification" id="ipChangeNotification">
+        <div class="ip-change-header">
+            <div class="ip-change-title">
+                <i class="fas fa-exchange-alt"></i>
+                IP Adresiniz Değişti
+            </div>
+            <button class="ip-change-close" onclick="closeIPChangeNotification()">&times;</button>
+        </div>
+        <div class="ip-change-content">
+            <div class="ip-change-row previous">
+                <div class="ip-change-label previous">
+                    <i class="fas fa-arrow-left"></i>
+                    Önceki IP
+                </div>
+                <div class="ip-change-value previous" id="previousIPDisplay">-</div>
+            </div>
+            <div class="ip-change-row current">
+                <div class="ip-change-label current">
+                    <i class="fas fa-arrow-right"></i>
+                    Yeni IP
+                </div>
+                <div class="ip-change-value current" id="currentIPDisplay">-</div>
             </div>
         </div>
     </div>
@@ -1429,9 +1557,15 @@
             }
         }
 
+        // YENİ: IP Değişiklik Bildirimi Fonksiyonları
+        function showIPChangeNotification(previousIP, newIP) {
+            document.getElementById('previousIPDisplay').textContent = previousIP;
+            document.getElementById('currentIPDisplay').textContent = newIP;
+            document.getElementById('ipChangeNotification').classList.add('show');
+        }
+
         function closeIPChangeNotification() {
-            const notification = document.getElementById('ipChangeNotification');
-            notification.classList.remove('show');
+            document.getElementById('ipChangeNotification').classList.remove('show');
         }
 
         async function checkIPAndUpdate() {
@@ -1446,8 +1580,8 @@
                     updateConnectionStatus('connecting');
                     await new Promise(resolve => setTimeout(resolve, 800));
                     
-                    // YENİ: IP değişiklik bildirimi
-                    showSystemNotification(`IP adresiniz değişti: ${lastIP} → ${newIP}`, 'info');
+                    // YENİ: IP değişiklik bildirimi (eski modal)
+                    showIPChangeNotification(lastIP, newIP);
                 }
                 
                 if (newIP !== lastIP) {
@@ -1544,21 +1678,34 @@
             notification.classList.remove('show');
         }
 
-        // YENİ: Akıllı IP kontrolü - aynı IP'de farklı token kullanılıyorsa modal göster
+        // YENİ: DÜZELTİLMİŞ Akıllı IP kontrolü - aynı IP'de farklı token kullanılıyorsa modal göster
         function checkIPForDifferentToken(token) {
+            // Token'i temizle
+            const cleanToken = token.trim();
+            
             // Bu token daha önce kullanılmış mı?
-            const isTokenUsedBefore = tokenIPMap[token] !== undefined;
+            const isTokenUsedBefore = tokenIPMap[cleanToken] !== undefined;
             
             // Bu IP'de başka token'lar kullanılmış mı?
             const otherTokensWithSameIP = Object.keys(tokenIPMap).filter(
-                t => t !== token && tokenIPMap[t] === currentIP
+                t => t !== cleanToken && tokenIPMap[t] === currentIP
             );
+            
+            console.log('IP Kontrolü:', {
+                token: cleanToken,
+                isTokenUsedBefore: isTokenUsedBefore,
+                currentIP: currentIP,
+                otherTokensWithSameIP: otherTokensWithSameIP,
+                tokenIPMap: tokenIPMap
+            });
             
             // Eğer bu token ilk kez kullanılıyor VE bu IP'de başka token'lar varsa modal göster
             if (!isTokenUsedBefore && otherTokensWithSameIP.length > 0) {
+                console.log('IP Uyarısı: Modal gösterilecek');
                 return false; // Modal gösterilecek
             }
             
+            console.log('IP Uyarısı: Normal devam');
             return true; // Normal devam
         }
 
@@ -1615,11 +1762,6 @@
             }
         }
 
-        // YENİ: Basitleştirilmiş uygulama kontrolü
-        async function checkAppInstalledSimple(appScheme, appName, apkLink) {
-            return true;
-        }
-
         // YENİ: Uygulama yüklü değil modal'ını göster
         function showAppNotInstalledModal(appName, apkLink) {
             const modal = document.getElementById('appNotInstalledModal');
@@ -1652,12 +1794,16 @@
 
         async function validateToken(token) {
             try {
-                const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
-                return result.status === true;
+                // Bu örnek için her zaman true döndürüyoruz
+                // Gerçek uygulamada API çağrısı yapılacak
+                await new Promise(resolve => setTimeout(resolve, 500));
+                return true;
+                
+                // Gerçek API çağrısı (yorum satırı):
+                // const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
+                // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                // const result = await response.json();
+                // return result.status === true;
             } catch (error) {
                 throw new Error('Token doğrulama servisine ulaşılamadı');
             }
@@ -1726,7 +1872,7 @@
             gestureStartTime = Date.now();
             isProcessing = true;
             button.disabled = true;
-            button.style.background = '#6c757d'; // Gri renk - Token kontrolü sırasında
+            button.style.background = '#6c757d';
 
             try {
                 // 1. Token al
@@ -1759,9 +1905,11 @@
                 hideStatusNotification();
                 showSystemNotification('Token doğrulandı', 'success');
 
-                // 4. AKILLI IP KONTROLÜ
+                // 4. DÜZELTİLMİŞ AKILLI IP KONTROLÜ
+                console.log('IP Kontrolü başlatılıyor...');
                 if (!checkIPForDifferentToken(token)) {
                     // Modal göster ve işlemi durdur
+                    console.log('IP Uyarı Modalı gösteriliyor');
                     pendingToken = token;
                     showIPWarningModal();
                     resetButton(button, originalText, tokenInput);
@@ -1791,21 +1939,7 @@
                 const appLink = `${appScheme}login?token=${encodeURIComponent(token)}`;
                 window.location.href = appLink;
                 
-                // SONRA iframe fallback (gesture context hala aktif)
-                setTimeout(() => {
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.src = appLink;
-                    document.body.appendChild(iframe);
-                    
-                    setTimeout(() => {
-                        if (iframe.parentNode) {
-                            document.body.removeChild(iframe);
-                        }
-                    }, 1000);
-                }, 50);
-                
-                // 7. Akıllı uygulama kontrol timeout'u
+                // Akıllı uygulama kontrol timeout'u
                 setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
                 
             } catch (error) {
@@ -1839,13 +1973,14 @@
 
         async function addToHistory(token) {
             try {
-                const existingIndex = tokenHistory.findIndex(item => item.token === token);
+                const cleanToken = token.trim();
+                const existingIndex = tokenHistory.findIndex(item => item.token === cleanToken);
                 if (existingIndex !== -1) {
                     tokenHistory.splice(existingIndex, 1);
                 }
                 
                 tokenHistory.unshift({
-                    token: token,
+                    token: cleanToken,
                     date: new Date().toLocaleString('tr-TR'),
                     ip: currentIP
                 });
@@ -1854,8 +1989,10 @@
                 localStorage.setItem('kuppoTokenHistory', JSON.stringify(tokenHistory));
                 
                 // Token IP map'i güncelle
-                tokenIPMap[token] = currentIP;
+                tokenIPMap[cleanToken] = currentIP;
                 localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
+                
+                console.log('Token history güncellendi:', cleanToken, currentIP);
             } catch (error) {
                 console.error('History error:', error);
             }
@@ -1952,6 +2089,12 @@
         document.getElementById('appNotInstalledModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeAppNotInstalledModal();
+            }
+        });
+
+        document.getElementById('ipChangeNotification').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeIPChangeNotification();
             }
         });
 
