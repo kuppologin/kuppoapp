@@ -1445,6 +1445,9 @@
                 if (newIP !== lastIP && lastIP !== '') {
                     updateConnectionStatus('connecting');
                     await new Promise(resolve => setTimeout(resolve, 800));
+                    
+                    // YENİ: IP değişiklik bildirimi
+                    showSystemNotification(`IP adresiniz değişti: ${lastIP} → ${newIP}`, 'info');
                 }
                 
                 if (newIP !== lastIP) {
@@ -1570,13 +1573,23 @@
             pendingToken = '';
         }
 
-        // YENİ: Aynı IP ile devam et (gesture-safe)
+        // YENİ: Geliştirilmiş continueWithSameIP fonksiyonu - blur+focus mekanizması ile
         function continueWithSameIP() {
             const tokenToUse = pendingToken;
             closeIPWarning();
             
             if (tokenToUse) {
-                // YENİ gesture context'inde scheme çağrısı
+                // Buton ve tokenInput'u seç
+                const button = document.querySelector('.giris-yap-btn');
+                const tokenInput = document.getElementById('token');
+                const originalText = button.textContent;
+
+                // Butonu işlem durumuna getir
+                button.textContent = "Uygulamaya Yönlendiriliyor...";
+                button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                button.disabled = true;
+
+                // Uygulama bilgilerini belirle
                 let appScheme, appName, apkLink;
                 if (tokenToUse.startsWith('yx-')) {
                     appScheme = 'kuppoys://';
@@ -1596,13 +1609,9 @@
                 addToHistory(tokenToUse);
                 tokenIPMap[tokenToUse] = currentIP;
                 localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
-                
-                // Uygulama kontrol timeout'u
-                setTimeout(() => {
-                    if (!document.hidden) {
-                        showAppNotInstalledModal(appName, apkLink);
-                    }
-                }, 2000);
+
+                // YENİ: Aynı blur+focus mekanizmasını başlat
+                setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
             }
         }
 
