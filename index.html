@@ -246,19 +246,46 @@
             flex-shrink: 0;
         }
         
-        /* YENİ: Eski Input Grup Stiline Dönüş */
+        /* YENİ: Güncellenmiş Input Grup Stili */
         .input-group {
             margin-bottom: 25px;
-            position: relative;
+        }
+        .input-with-icon-and-paste {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .input-icon-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 50px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            color: #0F2B76;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+        .input-icon-container:hover {
+            border-color: #5A21B5;
+            background: #f0f7ff;
+        }
+        .input-icon {
+            width: 22px;
+            height: 22px;
+            opacity: 0.9;
         }
         .input-with-paste {
             position: relative;
-            display: flex;
-            align-items: center;
+            flex: 1;
         }
         .paste-btn {
             position: absolute;
-            right: 10px;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
             background: #f8fafc;
             border: none;
             border-radius: 8px;
@@ -1129,6 +1156,13 @@
             .ip-change-notification {
                 max-width: 350px;
             }
+            .input-with-icon-and-paste {
+                gap: 8px;
+            }
+            .input-icon-container {
+                width: 40px;
+                height: 46px;
+            }
         }
         @media (max-width: 360px) {
             .download-links {
@@ -1152,6 +1186,15 @@
             }
             input {
                 padding: 15px;
+            }
+            .input-with-icon-and-paste {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .input-icon-container {
+                width: 100%;
+                height: 44px;
+                margin-bottom: 8px;
             }
         }
     </style>
@@ -1207,15 +1250,22 @@
                 </div>
             </div>
             
-            <!-- YENİ: Eski Input Yapısına Dönüş -->
+            <!-- YENİ: Güncellenmiş Input Yapısı -->
             <div class="input-group">
                 <label for="token">Token'inizi girin:</label>
-                <div class="input-with-paste">
-                    <input type="text" id="token" placeholder="Satın aldığınız tokeni buraya yapıştırın">
-                    <button class="paste-btn" onclick="pasteToken()">
-                        <i class="fas fa-paste"></i>
-                        Yapıştır
-                    </button>
+                <div class="input-with-icon-and-paste">
+                    <div class="input-icon-container">
+                        <svg class="input-icon" viewBox="0 0 24 24" width="22" height="22">
+                            <path fill="currentColor" d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
+                        </svg>
+                    </div>
+                    <div class="input-with-paste">
+                        <input type="text" id="token" placeholder="Satın aldığınız tokeni buraya yapıştırın">
+                        <button class="paste-btn" onclick="pasteToken()">
+                            <i class="fas fa-paste"></i>
+                            Yapıştır
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -1750,7 +1800,7 @@
                 tokenIPMap[tokenToUse] = currentIP;
                 localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
 
-                // YENİ: Aynı blur+focus mekanizmasını başlat (TOKEN TEMİZLEME YOK!)
+                // YENİ: Aynı blur+focus mekanizmasını başlat
                 setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
             }
         }
