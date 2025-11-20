@@ -1787,22 +1787,38 @@
             }
         }
 
-        async function validateToken(token) {
-            try {
-                // Bu örnek için her zaman true döndürüyoruz
-                // Gerçek uygulamada API çağrısı yapılacak
-                await new Promise(resolve => setTimeout(resolve, 500));
-                return true;
-                
-                // Gerçek API çağrısı (yorum satırı):
-                // const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-                // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                // const result = await response.json();
-                // return result.status === true;
-            } catch (error) {
-                throw new Error('Token doğrulama servisine ulaşılamadı');
-            }
+async function validateToken(token) {
+    try {
+        // GERÇEK API ÇAĞRISI
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        
+        const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`, {
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const result = await response.json();
+        return result.status === true;
+        
+    } catch (error) {
+        // API çöktüyse veya timeout olduysa, format kontrolü yap
+        console.log('API erişilemedi, format kontrolü yapılıyor:', error.message);
+        
+        // Basit format kontrolü - sadece yx- veya ty- ile başlıyor mu?
+        const cleanToken = token.trim();
+        if (cleanToken.startsWith('yx-') || cleanToken.startsWith('ty-')) {
+            // Format doğru, API çöktüğü için geçirelim
+            showSystemNotification('Sunucu yoğun, token format kontrolü yapıldı', 'warning');
+            return true;
+        } else {
+            // Format yanlış, reddet
+            throw new Error('Geçersiz token formatı');
         }
+    }
+}
 
         // YENİ: Geliştirilmiş uygulama kontrol timeout'u - BLUR + FOCUS
         function setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput) {
