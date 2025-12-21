@@ -11,6 +11,10 @@
       }
     },
     {
+      "src": "/storage/(.*)",
+      "dest": "/storage/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
