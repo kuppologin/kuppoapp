@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuppo YS & TY GO Giriş</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
         <link rel="icon" href="storage/favicon.png" type="image/png">
     <style>
         * {
@@ -79,7 +79,7 @@
             color: #22c55e;
         }
         .wifi-disconnected {
-            color: #ef4444;
+            color: #b91c1c;
         }
         .status-info {
             flex: 1;
@@ -1599,7 +1599,7 @@
                     
                 case 'disconnected':
                     statusIndicator.classList.add('disconnected');
-                    wifiSymbol.classList.add('fa-globe-americas', 'wifi-disconnected');
+                    wifiSymbol.classList.add('fa-globe-signal', 'wifi-disconnected');
                     statusText.textContent = 'Bağlantı Yok';
                     ipAddress.textContent = 'İnternet bağlantısı yok';
                     break;
