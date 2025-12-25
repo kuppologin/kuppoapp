@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kuppo YS & TY GO Giriş</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
-        <link rel="icon" href="storage/favicon.png" type="image/png">
+    <link rel="icon" href="storage/favicon.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -13,6 +14,7 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
+
         body {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: #333;
@@ -22,6 +24,7 @@
             align-items: center;
             padding: 20px;
         }
+
         .container {
             width: 100%;
             max-width: 500px;
@@ -30,6 +33,7 @@
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
             overflow: hidden;
         }
+
         .header {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
@@ -37,6 +41,7 @@
             text-align: center;
             position: relative;
         }
+
         .connection-status {
             display: flex;
             align-items: center;
@@ -49,6 +54,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
         }
+
         .status-indicator {
             width: 40px;
             height: 40px;
@@ -58,44 +64,55 @@
             justify-content: center;
             position: relative;
         }
+
         .status-indicator.connecting {
             background: rgba(59, 130, 246, 0.2);
         }
+
         .status-indicator.connected {
             background: rgba(34, 197, 94, 0.2);
         }
+
         .status-indicator.disconnected {
             background: rgba(185, 28, 28, 0.15);
         }
+
         .wifi-icon {
             width: 20px;
             height: 20px;
             position: relative;
         }
+
         .wifi-connecting {
             color: #3b82f6;
         }
+
         .wifi-connected {
             color: #22c55e;
         }
+
         .wifi-disconnected {
             color: #b91c1c;
         }
+
         .status-info {
             flex: 1;
             min-width: 0;
         }
+
         .status-text {
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 4px;
             color: white;
         }
+
         .ip-address {
             font-size: 13px;
             font-family: 'Courier New', monospace;
             color: rgba(255, 255, 255, 0.9);
         }
+
         .ip-display-container {
             display: flex;
             align-items: center;
@@ -108,11 +125,13 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .ip-display {
             font-size: 14px;
             font-weight: 500;
             flex: 1;
         }
+
         .toggle-ip-btn {
             background: rgba(255, 255, 255, 0.3);
             border: none;
@@ -130,21 +149,25 @@
             white-space: nowrap;
             user-select: none;
         }
+
         .toggle-ip-btn:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: translateY(-1px);
         }
+
         .eye-icon {
             width: 16px;
             height: 16px;
             fill: white;
         }
+
         .eye-slash-icon {
             width: 16px;
             height: 16px;
             fill: white;
             display: none;
         }
+
         .logo {
             width: 200px;
             height: 60px;
@@ -153,19 +176,23 @@
             align-items: center;
             justify-content: center;
         }
+
         .logo img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
+
         h1 {
             font-size: 26px;
             margin-bottom: 6px;
             font-weight: 700;
         }
+
         .content {
             padding: 30px;
         }
+
         .token-examples {
             background: #f8fafc;
             border-radius: 12px;
@@ -173,6 +200,7 @@
             margin-bottom: 20px;
             border: 1px solid #e2e8f0;
         }
+
         .info-box {
             background: #f0f7ff;
             border-radius: 10px;
@@ -181,6 +209,7 @@
             border-left: 4px solid #0F2B76;
             position: relative;
         }
+
         .info-icon {
             position: absolute;
             top: 16px;
@@ -196,9 +225,11 @@
             font-weight: bold;
             font-size: 14px;
         }
+
         .info-icon::after {
             content: "i";
         }
+
         .info-text {
             font-size: 14px;
             color: #333;
@@ -206,12 +237,14 @@
             line-height: 1.5;
             margin-left: 28px;
         }
+
         .download-links {
             display: flex;
             gap: 10px;
             margin-left: 28px;
             flex-wrap: wrap;
         }
+
         .download-btn {
             flex: 1;
             min-width: 140px;
@@ -235,28 +268,32 @@
             gap: 8px;
             user-select: none;
         }
+
         .download-btn:hover {
             background: #0F2B76;
             color: white;
             transform: translateY(-1px);
         }
+
         .download-icon {
             width: 18px;
             height: 18px;
             fill: currentColor;
             flex-shrink: 0;
         }
-        
+
         /* YENİ: Eski Input Grup Stiline Dönüş */
         .input-group {
             margin-bottom: 25px;
             position: relative;
         }
+
         .input-with-paste {
             position: relative;
             display: flex;
             align-items: center;
         }
+
         .paste-btn {
             position: absolute;
             right: 10px;
@@ -274,13 +311,16 @@
             gap: 6px;
             user-select: none;
         }
+
         .paste-btn:hover {
             background: #e2e8f0;
             color: #0F2B76;
         }
+
         .paste-btn i {
             font-size: 12px;
         }
+
         label {
             display: block;
             margin-bottom: 10px;
@@ -288,6 +328,7 @@
             color: #444;
             font-size: 15px;
         }
+
         input {
             width: 100%;
             padding: 15px 100px 15px 15px;
@@ -297,11 +338,13 @@
             transition: all 0.3s;
             background: white;
         }
+
         input:focus {
             border-color: #5A21B5;
             outline: none;
             box-shadow: 0 0 0 3px rgba(90, 33, 181, 0.1);
         }
+
         .giris-yap-btn {
             width: 100%;
             padding: 16px;
@@ -317,19 +360,23 @@
             margin-bottom: 10px;
             user-select: none;
         }
+
         .giris-yap-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
+
         .giris-yap-btn:disabled {
             background: #6c757d;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
+
         .history-section {
             margin-top: 15px;
         }
+
         .history-btn {
             background: #6c757d;
             border: 2px solid #6c757d;
@@ -348,17 +395,20 @@
             width: 100%;
             user-select: none;
         }
+
         .history-btn:hover {
             background: #5a6268;
             border-color: #5a6268;
             color: white;
             transform: translateY(-1px);
         }
+
         .history-icon {
             width: 18px;
             height: 18px;
             fill: currentColor;
         }
+
         .bottom-sheet-overlay {
             position: fixed;
             top: 0;
@@ -370,6 +420,7 @@
             display: none;
             z-index: 1000;
         }
+
         .bottom-sheet {
             position: fixed;
             top: 50%;
@@ -390,10 +441,12 @@
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             z-index: 1001;
         }
+
         .bottom-sheet.active {
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
+
         .bottom-sheet-header {
             padding: 24px 25px 20px;
             border-bottom: 1px solid rgba(15, 43, 118, 0.1);
@@ -402,12 +455,14 @@
             align-items: center;
             background: transparent;
         }
+
         .bottom-sheet-title {
             font-size: 20px;
             font-weight: 700;
             color: #0F2B76;
             letter-spacing: -0.5px;
         }
+
         .bottom-sheet-close {
             background: rgba(15, 43, 118, 0.1);
             border: none;
@@ -423,21 +478,25 @@
             transition: all 0.3s;
             user-select: none;
         }
+
         .bottom-sheet-close:hover {
             background: rgba(15, 43, 118, 0.2);
             transform: rotate(90deg);
         }
+
         .bottom-sheet-content {
             padding: 0;
             overflow-y: auto;
             flex: 1;
             background: transparent;
         }
+
         .history-tokens {
             display: flex;
             flex-direction: column;
             padding: 0 20px 20px;
         }
+
         .history-token {
             display: flex;
             justify-content: space-between;
@@ -451,12 +510,14 @@
             margin-bottom: 12px;
             backdrop-filter: blur(10px);
         }
+
         .history-token:hover {
             background: rgba(15, 43, 118, 0.05);
             border-color: rgba(15, 43, 118, 0.3);
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(15, 43, 118, 0.15);
         }
+
         .token-info {
             display: flex;
             flex-direction: column;
@@ -464,6 +525,7 @@
             gap: 6px;
             min-width: 0;
         }
+
         .token-text {
             font-family: 'Courier New', monospace;
             font-size: 14px;
@@ -472,12 +534,14 @@
             letter-spacing: -0.2px;
             word-break: break-all;
         }
+
         .token-details {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
         }
+
         .token-ip {
             font-size: 12px;
             color: #64748b;
@@ -487,15 +551,18 @@
             font-weight: 500;
             white-space: nowrap;
         }
+
         .token-date {
             font-size: 12px;
             color: #94a3b8;
             white-space: nowrap;
         }
+
         .current-ip {
             color: #0F2B76;
             font-weight: 600;
         }
+
         .use-token-btn {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
@@ -513,10 +580,12 @@
             flex-shrink: 0;
             user-select: none;
         }
+
         .use-token-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
+
         .no-history {
             text-align: center;
             color: #94a3b8;
@@ -529,11 +598,13 @@
             margin: 20px;
             backdrop-filter: blur(10px);
         }
+
         .bottom-sheet-footer {
             padding: 20px 25px;
             border-top: 1px solid rgba(15, 43, 118, 0.1);
             background: transparent;
         }
+
         .btn-secondary {
             background: #dc3545;
             color: white;
@@ -555,17 +626,20 @@
             gap: 10px;
             user-select: none;
         }
+
         .btn-secondary:hover {
             background: #c82333;
             border-color: #c82333;
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
         }
+
         .trash-icon {
             width: 18px;
             height: 18px;
             fill: currentColor;
         }
+
         .system-notification {
             position: fixed;
             bottom: -100px;
@@ -575,7 +649,7 @@
             padding: 16px 20px;
             border-radius: 14px;
             font-size: 14px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             z-index: 2000;
             display: flex;
             align-items: center;
@@ -586,25 +660,31 @@
             min-width: 280px;
             backdrop-filter: blur(20px);
         }
+
         .system-notification.show {
             bottom: 30px;
         }
+
         .system-notification.error {
             border-left-color: #dc2626;
             background: linear-gradient(135deg, #fef2f2, #fff);
         }
+
         .system-notification.warning {
             border-left-color: #d97706;
             background: linear-gradient(135deg, #fffbeb, #fff);
         }
+
         .system-notification.success {
             border-left-color: #16a34a;
             background: linear-gradient(135deg, #f0fdf4, #fff);
         }
+
         .system-notification.info {
             border-left-color: #0F2B76;
             background: linear-gradient(135deg, #f0f7ff, #fff);
         }
+
         .system-notification-icon {
             width: 20px;
             height: 20px;
@@ -617,23 +697,29 @@
             font-size: 12px;
             flex-shrink: 0;
         }
+
         .system-notification-icon.error {
             background: #dc2626;
         }
+
         .system-notification-icon.warning {
             background: #d97706;
         }
+
         .system-notification-icon.success {
             background: #16a34a;
         }
+
         .system-notification-icon.info {
             background: #0F2B76;
         }
+
         .system-notification-text {
             flex: 1;
             font-weight: 500;
             word-break: break-word;
         }
+
         .status-notification {
             position: fixed;
             bottom: -100px;
@@ -643,7 +729,7 @@
             padding: 16px 20px;
             border-radius: 12px;
             font-size: 14px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             z-index: 1999;
             display: flex;
             align-items: center;
@@ -653,9 +739,11 @@
             max-width: 90%;
             min-width: 200px;
         }
+
         .status-notification.show {
             bottom: 100px;
         }
+
         .status-icon {
             width: 20px;
             height: 20px;
@@ -668,16 +756,20 @@
             font-size: 12px;
             flex-shrink: 0;
         }
+
         .status-icon.loading {
             background: #0F2B76;
             animation: spin 1s linear infinite;
         }
+
         .status-icon.error {
             background: #dc2626;
         }
+
         .status-icon.success {
             background: #16a34a;
         }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -691,9 +783,11 @@
             z-index: 2000;
             padding: 20px;
         }
+
         .modal-overlay.active {
             display: flex;
         }
+
         .modal {
             background: white;
             border-radius: 20px;
@@ -702,12 +796,14 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
+
         .modal-header {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
             padding: 20px 25px;
             text-align: center;
         }
+
         .modal-title {
             font-size: 18px;
             font-weight: 600;
@@ -716,21 +812,25 @@
             justify-content: center;
             gap: 10px;
         }
+
         .modal-content {
             padding: 25px;
             text-align: center;
         }
+
         .modal-text {
             font-size: 15px;
             color: #444;
             margin-bottom: 25px;
             line-height: 1.5;
         }
+
         .modal-footer {
             padding: 20px 25px;
             display: flex;
             gap: 10px;
         }
+
         .modal-btn {
             flex: 1;
             padding: 14px;
@@ -746,22 +846,27 @@
             justify-content: center;
             gap: 8px;
         }
+
         .modal-btn-cancel {
             background: #f8fafc;
             color: #444;
             border: 2px solid #e2e8f0;
         }
+
         .modal-btn-cancel:hover {
             background: #e2e8f0;
         }
+
         .modal-btn-confirm {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
         }
+
         .modal-btn-confirm:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(15, 43, 118, 0.3);
         }
+
         .footer {
             text-align: center;
             padding: 20px;
@@ -770,6 +875,7 @@
             border-top: 1px solid #e2e8f0;
             background: #f8fafc;
         }
+
         .website-link {
             color: #64748b;
             text-decoration: none;
@@ -779,13 +885,16 @@
             gap: 6px;
             font-size: 13px;
         }
+
         .website-link:hover {
             color: #0F2B76;
         }
+
         .website-link i {
             font-size: 11px;
             opacity: 0.8;
         }
+
         .device-warning-overlay {
             position: fixed;
             top: 0;
@@ -800,9 +909,11 @@
             z-index: 3000;
             padding: 20px;
         }
+
         .device-warning-overlay.active {
             display: flex;
         }
+
         .device-warning-modal {
             background: white;
             border-radius: 20px;
@@ -812,29 +923,35 @@
             overflow: hidden;
             text-align: center;
         }
+
         .device-warning-header {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
             padding: 25px;
         }
+
         .device-warning-icon {
             font-size: 48px;
             margin-bottom: 15px;
         }
+
         .device-warning-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 8px;
         }
+
         .device-warning-content {
             padding: 25px;
         }
+
         .device-warning-text {
             font-size: 15px;
             color: #444;
             margin-bottom: 25px;
             line-height: 1.5;
         }
+
         .device-warning-btn {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
@@ -850,11 +967,12 @@
             gap: 8px;
             user-select: none;
         }
+
         .device-warning-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
-        
+
         /* EKLENEN KISIM: "Bir daha gösterme" seçeneği için CSS */
         .dont-show-container {
             margin: 18px 0 20px 0;
@@ -864,7 +982,7 @@
             border: 1px solid #e2e8f0;
             text-align: left;
         }
-        
+
         .dont-show-label {
             display: flex;
             align-items: center;
@@ -874,14 +992,14 @@
             user-select: none;
             gap: 10px;
         }
-        
+
         .dont-show-checkbox {
             width: 18px;
             height: 18px;
             cursor: pointer;
             accent-color: #0F2B76;
         }
-        
+
         .incompatible-notification {
             position: fixed;
             bottom: -100px;
@@ -891,7 +1009,7 @@
             padding: 16px 20px;
             border-radius: 14px;
             font-size: 14px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
             z-index: 2002;
             display: flex;
             align-items: center;
@@ -902,9 +1020,11 @@
             min-width: 280px;
             backdrop-filter: blur(20px);
         }
+
         .incompatible-notification.show {
             bottom: 30px;
         }
+
         .incompatible-notification-icon {
             width: 20px;
             height: 20px;
@@ -918,11 +1038,13 @@
             flex-shrink: 0;
             background: #dc2626;
         }
+
         .incompatible-notification-text {
             flex: 1;
             font-weight: 500;
             word-break: break-word;
         }
+
         .app-not-installed-modal {
             position: fixed;
             top: 0;
@@ -937,9 +1059,11 @@
             z-index: 3001;
             padding: 20px;
         }
+
         .app-not-installed-modal.active {
             display: flex;
         }
+
         .app-not-installed-content {
             background: white;
             border-radius: 20px;
@@ -949,33 +1073,40 @@
             overflow: hidden;
             text-align: center;
         }
+
         .app-not-installed-header {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
             padding: 25px;
         }
+
         .app-not-installed-icon {
             font-size: 48px;
             margin-bottom: 15px;
         }
+
         .app-not-installed-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 8px;
         }
+
         .app-not-installed-body {
             padding: 25px;
         }
+
         .app-not-installed-text {
             font-size: 15px;
             color: #444;
             margin-bottom: 25px;
             line-height: 1.5;
         }
+
         .app-not-installed-buttons {
             display: flex;
             gap: 10px;
         }
+
         .app-not-installed-cancel {
             flex: 1;
             background: #f8fafc;
@@ -992,9 +1123,11 @@
             justify-content: center;
             gap: 8px;
         }
+
         .app-not-installed-cancel:hover {
             background: #e2e8f0;
         }
+
         .app-not-installed-download {
             flex: 1;
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
@@ -1011,11 +1144,12 @@
             justify-content: center;
             gap: 8px;
         }
+
         .app-not-installed-download:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(15, 43, 118, 0.4);
         }
-        
+
         /* YENİ: IP Değişiklik Bildirimi Modalı */
         .ip-change-notification {
             position: fixed;
@@ -1032,9 +1166,11 @@
             overflow: hidden;
             border: 2px solid #e2e8f0;
         }
+
         .ip-change-notification.show {
             bottom: 30px;
         }
+
         .ip-change-header {
             background: linear-gradient(135deg, #0F2B76, #5A21B5);
             color: white;
@@ -1043,6 +1179,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .ip-change-title {
             font-size: 18px;
             font-weight: 600;
@@ -1050,6 +1187,7 @@
             align-items: center;
             gap: 10px;
         }
+
         .ip-change-close {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -1064,13 +1202,16 @@
             justify-content: center;
             transition: all 0.3s;
         }
+
         .ip-change-close:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: rotate(90deg);
         }
+
         .ip-change-content {
             padding: 25px;
         }
+
         .ip-change-row {
             display: flex;
             justify-content: space-between;
@@ -1078,15 +1219,19 @@
             padding: 15px 0;
             border-bottom: 1px solid #e2e8f0;
         }
+
         .ip-change-row:last-child {
             border-bottom: none;
         }
+
         .ip-change-row.previous {
             color: #dc2626;
         }
+
         .ip-change-row.current {
             color: #16a34a;
         }
+
         .ip-change-label {
             display: flex;
             align-items: center;
@@ -1094,6 +1239,7 @@
             font-weight: 600;
             font-size: 15px;
         }
+
         .ip-change-value {
             font-family: 'Courier New', monospace;
             font-weight: 600;
@@ -1102,11 +1248,13 @@
             border-radius: 8px;
             background: #f8fafc;
         }
+
         .ip-change-value.previous {
             background: #fef2f2;
             color: #dc2626;
             border: 1px solid #fecaca;
         }
+
         .ip-change-value.current {
             background: #f0fdf4;
             color: #16a34a;
@@ -1114,77 +1262,226 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         @media (max-width: 480px) {
             .download-btn {
                 min-width: 120px;
                 font-size: 12px;
                 padding: 12px 8px;
             }
+
             .system-notification {
                 min-width: 250px;
                 padding: 14px 16px;
                 font-size: 13px;
             }
+
             .use-token-btn {
                 padding: 8px 12px;
                 font-size: 12px;
                 min-width: 60px;
             }
+
             .token-details {
                 gap: 8px;
             }
-            .token-ip, .token-date {
+
+            .token-ip,
+            .token-date {
                 font-size: 11px;
             }
+
             .paste-btn {
                 padding: 6px 10px;
                 font-size: 12px;
             }
+
             input {
                 padding: 15px 90px 15px 15px;
             }
+
             .device-warning-modal {
                 max-width: 350px;
             }
+
             .app-not-installed-content {
                 max-width: 350px;
             }
+
             .app-not-installed-buttons {
                 flex-direction: column;
             }
+
             .ip-change-notification {
                 max-width: 350px;
             }
         }
+
         @media (max-width: 360px) {
             .download-links {
                 flex-direction: column;
             }
+
             .download-btn {
                 min-width: 100%;
             }
+
             .ip-display-container {
                 flex-direction: column;
                 gap: 8px;
             }
+
             .toggle-ip-btn {
                 width: 100%;
             }
+
             .paste-btn {
                 position: static;
                 margin-top: 8px;
                 width: 100%;
                 justify-content: center;
             }
+
             input {
                 padding: 15px;
             }
         }
+
+        /* TELEGRAM DESTEK BUTONU */
+
+        .support-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* KAPALI HAL */
+        .support-button {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            text-align: center;
+            line-height: 50px;
+            background: #2A4B98;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(15, 43, 118, 0.25);
+            transition: all 0.275s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* 0.3 → 0.275 */
+            user-select: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* İKON */
+        .support-button i {
+            font-size: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+            padding: 0;
+            transition: font-size 0.275s ease;
+            /* 0.3 → 0.275 */
+        }
+
+        /* YAZI */
+        .support-text {
+            display: none;
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            margin-left: 6px;
+            transition: opacity 0.175s ease;
+            /* 0.2 → 0.175 */
+        }
+
+        /* AÇIK HAL (Hover) */
+        .support-button:hover {
+            width: 110px;
+            border-radius: 25px;
+            padding: 0 15px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            line-height: normal;
+            gap: 8px;
+        }
+
+        .support-button:hover .support-text {
+            display: inline-block;
+            opacity: 1;
+        }
+
+        .support-button:hover i {
+            font-size: 18px;
+        }
+
+        /* GERİ ÇEKİLME */
+        .support-button:not(:hover) {
+            transition: all 0s !important;
+        }
+
+        .support-button:not(:hover) i {
+            transition: font-size 0s !important;
+        }
+
+        .support-button:not(:hover) .support-text {
+            transition: opacity 0s !important;
+            display: none !important;
+            opacity: 0 !important;
+        }
+
+        /* MOBİL */
+        @media (max-width: 768px) {
+            .support-button-container {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .support-button {
+                width: 45px;
+                height: 45px;
+                line-height: 45px;
+            }
+
+            .support-button:hover {
+                width: 100px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .support-button-container {
+                bottom: 12px;
+                right: 12px;
+            }
+
+            .support-button {
+                width: 42px;
+                height: 42px;
+                line-height: 42px;
+            }
+
+            .support-button:hover {
+                width: 95px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -1200,16 +1497,18 @@
                 </div>
                 <button class="toggle-ip-btn" id="toggleIpBtn">
                     <svg class="eye-icon" viewBox="0 0 24 24">
-                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        <path
+                            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
                     </svg>
                     <svg class="eye-slash-icon" viewBox="0 0 24 24">
-                        <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+                        <path
+                            d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
                     </svg>
                     <span id="toggleIpText">Gizle</span>
                 </button>
             </div>
             <div class="logo">
-<img src="storage/logo.png" alt="Kuppo.net Logo">
+                <img src="storage/logo.png" alt="Kuppo.net Logo">
             </div>
             <h1>Kuppo YS & TY GO Hızlı Giriş</h1>
         </div>
@@ -1219,23 +1518,26 @@
             </div>
             <div class="info-box">
                 <div class="info-icon"></div>
-                <p class="info-text">Giriş yapmak için Kuppo YS/TY GO uygulamasının cihazınızda kurulu olması gerekir.</p>
+                <p class="info-text">Giriş yapmak için Kuppo YS/TY GO uygulamasının cihazınızda kurulu olması gerekir.
+                </p>
                 <div class="download-links">
-                    <a href="https://sunucu.kuppo.net/files/kuppo_ys_v2_1.apk" class="download-btn" onclick="handleDownload('ys')" target="_blank">
+                    <a href="https://sunucu.kuppo.net/files/kuppo_ys_v2_1.apk" class="download-btn"
+                        onclick="handleDownload('ys')" target="_blank">
                         <svg class="download-icon" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
                         </svg>
                         Kuppo YS
                     </a>
-                    <a href="https://sunucu.kuppo.net/files/TYGO_V4.apk" class="download-btn" onclick="handleDownload('ty')" target="_blank">
+                    <a href="https://sunucu.kuppo.net/files/TYGO_V4.apk" class="download-btn"
+                        onclick="handleDownload('ty')" target="_blank">
                         <svg class="download-icon" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                            <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
                         </svg>
                         TY GO
                     </a>
                 </div>
             </div>
-            
+
             <!-- YENİ: Eski Input Yapısına Dönüş -->
             <div class="input-group">
                 <label for="token">Token'inizi girin:</label>
@@ -1247,12 +1549,13 @@
                     </button>
                 </div>
             </div>
-            
+
             <button class="giris-yap-btn" onclick="handleSingleClickLogin()">Giriş Yap</button>
             <div class="history-section">
                 <div class="history-btn" onclick="openBottomSheet()">
                     <svg class="history-icon" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        <path fill="currentColor"
+                            d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
                     </svg>
                     Geçmiş
                 </div>
@@ -1280,7 +1583,8 @@
             <div class="bottom-sheet-footer">
                 <button class="btn-secondary" onclick="clearHistory()">
                     <svg class="trash-icon" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                        <path fill="currentColor"
+                            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                     </svg>
                     Geçmişi Temizle
                 </button>
@@ -1301,14 +1605,14 @@
                 <div class="device-warning-text">
                     Uyumlu olmayan cihaz tespit edildi. Site çalışmayacak.
                 </div>
-                
+
                 <div class="dont-show-container">
                     <label class="dont-show-label">
                         <input type="checkbox" id="dontShowAgainCheckbox" class="dont-show-checkbox">
                         <span>Bu uyarıyı bir daha gösterme</span>
                     </label>
                 </div>
-                
+
                 <button class="device-warning-btn" onclick="closeDeviceWarning()">
                     <i class="fas fa-check"></i>
                     Tamam
@@ -1356,7 +1660,8 @@
             </div>
             <div class="modal-footer">
                 <button class="modal-btn modal-btn-cancel" onclick="closeIPWarning()">İptal</button>
-                <button class="modal-btn modal-btn-confirm" id="confirmButton" onclick="continueWithSameIP()">Devam Et</button>
+                <button class="modal-btn modal-btn-confirm" id="confirmButton" onclick="continueWithSameIP()">Devam
+                    Et</button>
             </div>
         </div>
     </div>
@@ -1437,7 +1742,7 @@
             if (hideDeviceWarning === 'true') {
                 return;
             }
-            
+
             if (!isAndroidDevice()) {
                 document.getElementById('deviceWarningOverlay').classList.add('active');
             }
@@ -1447,12 +1752,12 @@
         function closeDeviceWarning() {
             // Checkbox durumunu kontrol et
             const dontShowAgainCheckbox = document.getElementById('dontShowAgainCheckbox');
-            
+
             // Eğer kullanıcı "bir daha gösterme"yi seçtiyse, LocalStorage'a kaydet
             if (dontShowAgainCheckbox && dontShowAgainCheckbox.checked) {
                 localStorage.setItem('hideDeviceWarning', 'true');
             }
-            
+
             // Modalı kapat
             document.getElementById('deviceWarningOverlay').classList.remove('active');
         }
@@ -1460,11 +1765,11 @@
         function showIncompatibleDeviceWarning(appName) {
             const notification = document.getElementById('incompatibleNotification');
             const notificationText = document.getElementById('incompatibleNotificationText');
-            
+
             notificationText.textContent = `${appName} bu cihazda çalışamaz`;
-            
+
             notification.classList.add('show');
-            
+
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 1900);
@@ -1473,20 +1778,20 @@
         function initializeButtonProtection() {
             const buttons = document.querySelectorAll('button, .download-btn, .giris-yap-btn, .history-btn, .use-token-btn, .btn-secondary, .toggle-ip-btn, .bottom-sheet-close, .modal-btn, .paste-btn');
             buttons.forEach(button => {
-                button.addEventListener('contextmenu', function(e) {
+                button.addEventListener('contextmenu', function (e) {
                     e.preventDefault();
                     return false;
                 });
-                button.addEventListener('mousedown', function(e) {
+                button.addEventListener('mousedown', function (e) {
                     if (e.button === 0) {
                         e.preventDefault();
                     }
                 });
-                button.addEventListener('selectstart', function(e) {
+                button.addEventListener('selectstart', function (e) {
                     e.preventDefault();
                     return false;
                 });
-                button.addEventListener('dragstart', function(e) {
+                button.addEventListener('dragstart', function (e) {
                     e.preventDefault();
                     return false;
                 });
@@ -1528,18 +1833,18 @@
             const notification = document.getElementById('systemNotification');
             const notificationText = document.getElementById('systemNotificationText');
             const notificationIcon = notification.querySelector('.system-notification-icon');
-            
+
             if (currentNotificationTimeout) {
                 clearTimeout(currentNotificationTimeout);
                 notification.classList.remove('show');
             }
-            
+
             notificationText.textContent = message;
             notification.className = 'system-notification';
             notificationIcon.className = 'system-notification-icon';
             notification.classList.add(type);
             notificationIcon.classList.add(type);
-            
+
             if (type === 'error') {
                 notificationIcon.textContent = '!';
             } else if (type === 'warning') {
@@ -1549,11 +1854,11 @@
             } else {
                 notificationIcon.textContent = 'i';
             }
-            
+
             setTimeout(() => {
                 notification.classList.add('show');
             }, 10);
-            
+
             currentNotificationTimeout = setTimeout(() => {
                 notification.classList.remove('show');
                 currentNotificationTimeout = null;
@@ -1580,7 +1885,7 @@
             wifiSymbol.className = 'fas';
             wifiSymbol.style.animation = 'none';
 
-            switch(status) {
+            switch (status) {
                 case 'connecting':
                     statusIndicator.classList.add('connecting');
                     wifiSymbol.classList.add('fa-sync-alt', 'wifi-connecting');
@@ -1588,14 +1893,14 @@
                     statusText.textContent = 'Bağlantı kuruluyor...';
                     ipAddress.textContent = '-';
                     break;
-                    
+
                 case 'connected':
                     statusIndicator.classList.add('connected');
                     wifiSymbol.classList.add('fa-wifi', 'wifi-connected');
                     statusText.textContent = 'Bağlandı';
                     ipAddress.textContent = isIPHidden ? '••••••••••••' : ip;
                     break;
-                    
+
                 case 'disconnected':
                     statusIndicator.classList.add('disconnected');
                     wifiSymbol.classList.add('fa-signal', 'wifi-disconnected');
@@ -1618,26 +1923,26 @@
 
         async function checkIPAndUpdate() {
             if (ipCheckInProgress) return;
-            
+
             ipCheckInProgress = true;
-            
+
             try {
                 const newIP = await getIPAddress();
-                
+
                 if (newIP !== lastIP && lastIP !== '') {
                     updateConnectionStatus('connecting');
                     await new Promise(resolve => setTimeout(resolve, 800));
-                    
+
                     // YENİ: IP değişiklik bildirimi (eski modal)
                     showIPChangeNotification(lastIP, newIP);
                 }
-                
+
                 if (newIP !== lastIP) {
                     currentIP = newIP;
                     lastIP = newIP;
                     updateConnectionStatus('connected', currentIP);
                     isOnline = true;
-                    
+
                     if (isInitialLoad) {
                         isInitialLoad = false;
                     }
@@ -1652,7 +1957,7 @@
                     updateConnectionStatus('disconnected');
                 }
                 isOnline = false;
-                
+
                 if (isInitialLoad) {
                     isInitialLoad = false;
                 }
@@ -1663,11 +1968,11 @@
 
         function toggleIPVisibility() {
             isIPHidden = !isIPHidden;
-            
+
             const eyeIcon = document.querySelector('.eye-icon');
             const eyeSlashIcon = document.querySelector('.eye-slash-icon');
             const toggleIpText = document.getElementById('toggleIpText');
-            
+
             if (isIPHidden) {
                 eyeIcon.style.display = 'none';
                 eyeSlashIcon.style.display = 'block';
@@ -1677,7 +1982,7 @@
                 eyeSlashIcon.style.display = 'none';
                 toggleIpText.textContent = 'Gizle';
             }
-            
+
             if (isOnline) {
                 updateConnectionStatus('connected', currentIP);
             }
@@ -1694,10 +1999,10 @@
             const notification = document.getElementById('statusNotification');
             const statusText = document.getElementById('statusNotificationText');
             const statusIcon = notification.querySelector('.status-icon');
-            
+
             statusText.textContent = message;
             statusIcon.className = 'status-icon';
-            
+
             if (type === 'loading') {
                 statusIcon.classList.add('loading');
                 statusIcon.textContent = '⟳';
@@ -1711,9 +2016,9 @@
                 statusIcon.textContent = '✓';
                 notification.style.borderLeftColor = '#16a34a';
             }
-            
+
             notification.classList.add('show');
-            
+
             if (type !== 'loading') {
                 setTimeout(() => {
                     notification.classList.remove('show');
@@ -1730,15 +2035,15 @@
         function checkIPForDifferentToken(token) {
             // Token'i temizle
             const cleanToken = token.trim();
-            
+
             // Bu token daha önce kullanılmış mı?
             const isTokenUsedBefore = tokenIPMap[cleanToken] !== undefined;
-            
+
             // Bu IP'de başka token'lar kullanılmış mı?
             const otherTokensWithSameIP = Object.keys(tokenIPMap).filter(
                 t => t !== cleanToken && tokenIPMap[t] === currentIP
             );
-            
+
             console.log('IP Kontrolü:', {
                 token: cleanToken,
                 isTokenUsedBefore: isTokenUsedBefore,
@@ -1746,13 +2051,13 @@
                 otherTokensWithSameIP: otherTokensWithSameIP,
                 tokenIPMap: tokenIPMap
             });
-            
+
             // Eğer bu token ilk kez kullanılıyor VE bu IP'de başka token'lar varsa modal göster
             if (!isTokenUsedBefore && otherTokensWithSameIP.length > 0) {
                 console.log('IP Uyarısı: Modal gösterilecek');
                 return false; // Modal gösterilecek
             }
-            
+
             console.log('IP Uyarısı: Normal devam');
             return true; // Normal devam
         }
@@ -1773,7 +2078,7 @@
         function continueWithSameIP() {
             const tokenToUse = pendingToken;
             closeIPWarning();
-            
+
             if (tokenToUse) {
                 // Buton ve tokenInput'u seç
                 const button = document.querySelector('.giris-yap-btn');
@@ -1815,12 +2120,12 @@
         function showAppNotInstalledModal(appName, apkLink) {
             const modal = document.getElementById('appNotInstalledModal');
             const textElement = document.getElementById('appNotInstalledText');
-            
+
             textElement.innerHTML = `
                 <strong>${appName}</strong> uygulaması cihazınızda yüklü değil.<br>
                 Giriş yapabilmek için lütfen uygulamayı indirin ve kurun.
             `;
-            
+
             currentAppData = { appName, apkLink };
             modal.classList.add('active');
         }
@@ -1841,38 +2146,38 @@
             }
         }
 
-async function validateToken(token) {
-    try {
-        // GERÇEK API ÇAĞRISI
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
-        
-        const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`, {
-            signal: controller.signal
-        });
-        
-        clearTimeout(timeoutId);
-        
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const result = await response.json();
-        return result.status === true;
-        
-    } catch (error) {
-        // API çöktüyse veya timeout olduysa, format kontrolü yap
-        console.log('API erişilemedi, format kontrolü yapılıyor:', error.message);
-        
-        // Basit format kontrolü - sadece yx- veya ty- ile başlıyor mu?
-        const cleanToken = token.trim();
-        if (cleanToken.startsWith('yx-') || cleanToken.startsWith('ty-')) {
-            // Format doğru, API çöktüğü için geçirelim
-            showSystemNotification('Sunucu yoğun, token format kontrolü yapıldı', 'warning');
-            return true;
-        } else {
-            // Format yanlış, reddet
-            throw new Error('Geçersiz token formatı');
+        async function validateToken(token) {
+            try {
+                // GERÇEK API ÇAĞRISI
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+                const response = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`, {
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const result = await response.json();
+                return result.status === true;
+
+            } catch (error) {
+                // API çöktüyse veya timeout olduysa, format kontrolü yap
+                console.log('API erişilemedi, format kontrolü yapılıyor:', error.message);
+
+                // Basit format kontrolü - sadece yx- veya ty- ile başlıyor mu?
+                const cleanToken = token.trim();
+                if (cleanToken.startsWith('yx-') || cleanToken.startsWith('ty-')) {
+                    // Format doğru, API çöktüğü için geçirelim
+                    showSystemNotification('Sunucu yoğun, token format kontrolü yapıldı', 'warning');
+                    return true;
+                } else {
+                    // Format yanlış, reddet
+                    throw new Error('Geçersiz token formatı');
+                }
+            }
         }
-    }
-}
 
         // YENİ: Geliştirilmiş uygulama kontrol timeout'u - BLUR + FOCUS
         function setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput) {
@@ -1880,7 +2185,7 @@ async function validateToken(token) {
             if (appCheckTimeout) {
                 clearTimeout(appCheckTimeout);
             }
-            
+
             // Önceki event listener'ları temizle
             if (blurHandler) {
                 window.removeEventListener('blur', blurHandler);
@@ -1888,16 +2193,16 @@ async function validateToken(token) {
             if (focusHandler) {
                 window.removeEventListener('focus', focusHandler);
             }
-            
+
             let appOpened = false;
             let blurTime = 0;
-            
+
             // Blur event'i: Uygulama açıldığında tetiklenir
             blurHandler = () => {
                 blurTime = Date.now();
                 appOpened = true;
             };
-            
+
             // Focus event'i: Kullanıcı uygulamadan geri döndüğünde tetiklenir
             focusHandler = () => {
                 if (appOpened && blurTime > 0) {
@@ -1910,10 +2215,10 @@ async function validateToken(token) {
                     }
                 }
             };
-            
+
             window.addEventListener('blur', blurHandler);
             window.addEventListener('focus', focusHandler);
-            
+
             // 2 saniye sonra hala uygulama açılmadıysa modal göster
             appCheckTimeout = setTimeout(() => {
                 if (!appOpened) {
@@ -1921,7 +2226,7 @@ async function validateToken(token) {
                     resetButtonAndClearToken(button, originalText, tokenInput);
                 }
             }, 2000);
-            
+
             return appCheckTimeout;
         }
 
@@ -1931,10 +2236,10 @@ async function validateToken(token) {
             button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
             button.disabled = false;
             isProcessing = false;
-            
+
             // YENİ: Token input'unu temizle - ARTIK SADECE BURADA!
             tokenInput.value = '';
-            
+
             // Timeout ve event listener'ları temizle
             if (appCheckTimeout) {
                 clearTimeout(appCheckTimeout);
@@ -1956,9 +2261,9 @@ async function validateToken(token) {
             button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
             button.disabled = false;
             isProcessing = false;
-            
+
             // YENİ: Token input'u burada temizlenmiyor!
-            
+
             // Timeout ve event listener'ları temizle
             if (appCheckTimeout) {
                 clearTimeout(appCheckTimeout);
@@ -1977,11 +2282,11 @@ async function validateToken(token) {
         // YENİ: DÜZELTİLMİŞ handleSingleClickLogin - IP modalında resetButton KALDIRILDI
         async function handleSingleClickLogin() {
             if (isProcessing) return;
-            
+
             const button = document.querySelector('.giris-yap-btn');
             const originalText = button.textContent;
             const tokenInput = document.getElementById("token");
-            
+
             // Gesture context'i başlat
             gestureStartTime = Date.now();
             isProcessing = true;
@@ -1991,15 +2296,15 @@ async function validateToken(token) {
             try {
                 // 1. Token al
                 const token = tokenInput.value.trim();
-                
+
                 if (!token) {
                     throw new Error('Token girin');
                 }
-                
+
                 if (!token.startsWith('yx-') && !token.startsWith('ty-')) {
                     throw new Error('Geçersiz token formatı: yx- veya ty- ile başlamalı');
                 }
-                
+
                 // 2. Cihaz kontrolü
                 if (!isAndroidDevice()) {
                     let appName = token.startsWith('yx-') ? "Kuppo YS" : "TY GO";
@@ -2007,15 +2312,15 @@ async function validateToken(token) {
                     resetButton(button, originalText, tokenInput);
                     return;
                 }
-                
+
                 // 3. Token validation
                 showStatusNotification('Token kontrol ediliyor', 'loading');
                 const isValid = await validateToken(token);
-                
+
                 if (!isValid) {
                     throw new Error('Geçersiz token');
                 }
-                
+
                 hideStatusNotification();
                 showSystemNotification('Token doğrulandı', 'success');
 
@@ -2026,7 +2331,7 @@ async function validateToken(token) {
                     console.log('IP Uyarı Modalı gösteriliyor');
                     pendingToken = token;
                     showIPWarningModal();
-                    
+
                     // YENİ: Sadece butonu resetle, token input'unu TEMİZLEME!
                     button.textContent = originalText;
                     button.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
@@ -2050,17 +2355,17 @@ async function validateToken(token) {
                 // 6. Butonu yeşil yap ve yazıyı değiştir
                 button.textContent = "Uygulamaya Yönlendiriliyor...";
                 button.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-                
+
                 // Geçmişe ekle
                 await addToHistory(token);
-                
+
                 // Gesture-safe scheme çağrısı
                 const appLink = `${appScheme}login?token=${encodeURIComponent(token)}`;
                 window.location.href = appLink;
-                
+
                 // Akıllı uygulama kontrol timeout'u
                 setupAppCheckTimeout(appName, apkLink, button, originalText, tokenInput);
-                
+
             } catch (error) {
                 hideStatusNotification();
                 showSystemNotification(error.message, 'error');
@@ -2075,20 +2380,20 @@ async function validateToken(token) {
                 if (existingIndex !== -1) {
                     tokenHistory.splice(existingIndex, 1);
                 }
-                
+
                 tokenHistory.unshift({
                     token: cleanToken,
                     date: new Date().toLocaleString('tr-TR'),
                     ip: currentIP
                 });
-                
+
                 tokenHistory = tokenHistory.slice(0, 10);
                 localStorage.setItem('kuppoTokenHistory', JSON.stringify(tokenHistory));
-                
+
                 // Token IP map'i güncelle
                 tokenIPMap[cleanToken] = currentIP;
                 localStorage.setItem('kuppoTokenIPMap', JSON.stringify(tokenIPMap));
-                
+
                 console.log('Token history güncellendi:', cleanToken, currentIP);
             } catch (error) {
                 console.error('History error:', error);
@@ -2097,18 +2402,18 @@ async function validateToken(token) {
 
         async function loadHistory() {
             const historyTokens = document.getElementById('historyTokens');
-            
+
             if (tokenHistory.length > 0) {
                 historyTokens.innerHTML = '';
-                
+
                 for (const item of tokenHistory) {
                     try {
                         const tokenElement = document.createElement('div');
                         tokenElement.className = 'history-token';
-                        
+
                         const isCurrentIP = item.ip === currentIP;
                         const ipDisplay = `IP: ${item.ip}${isCurrentIP ? ' <span class="current-ip"><i class="fas fa-location-dot"></i> Şu anki IP</span>' : ''}`;
-                        
+
                         tokenElement.innerHTML = `
                             <div class="token-info">
                                 <div class="token-text">${formatTokenForDisplay(item.token)}</div>
@@ -2119,20 +2424,20 @@ async function validateToken(token) {
                             </div>
                             <button class="use-token-btn">Kullan</button>
                         `;
-                        
+
                         tokenElement.querySelector('.use-token-btn').onclick = (e) => {
                             e.stopPropagation();
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
                             showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
                         };
-                        
+
                         tokenElement.onclick = () => {
                             document.getElementById('token').value = item.token;
                             closeBottomSheet();
                             showSystemNotification('Giriş yapmak için butona tıklayın', 'success');
                         };
-                        
+
                         historyTokens.appendChild(tokenElement);
                     } catch (error) {
                         continue;
@@ -2169,13 +2474,13 @@ async function validateToken(token) {
         }
 
         // Event Listeners
-        document.getElementById('bottomSheetOverlay').addEventListener('click', function(e) {
+        document.getElementById('bottomSheetOverlay').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeBottomSheet();
             }
         });
 
-        document.getElementById('ipWarningModal').addEventListener('click', function(e) {
+        document.getElementById('ipWarningModal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeIPWarning();
             }
@@ -2183,50 +2488,144 @@ async function validateToken(token) {
 
         document.getElementById('toggleIpBtn').addEventListener('click', toggleIPVisibility);
 
-        document.getElementById('appNotInstalledModal').addEventListener('click', function(e) {
+        document.getElementById('appNotInstalledModal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeAppNotInstalledModal();
             }
         });
 
-        document.getElementById('ipChangeNotification').addEventListener('click', function(e) {
+        document.getElementById('ipChangeNotification').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeIPChangeNotification();
             }
         });
 
-        window.addEventListener('online', function() {
+        window.addEventListener('online', function () {
             checkIPAndUpdate();
         });
 
-        window.addEventListener('offline', function() {
+        window.addEventListener('offline', function () {
             updateConnectionStatus('disconnected');
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initializeButtonProtection();
-            
+
             // YENİ: showDeviceWarning fonksiyonunu çağır (LocalStorage kontrolü artık içinde)
             showDeviceWarning();
-            
+
             updateConnectionStatus('connecting');
             checkIPAndUpdate();
-            
+
             connectionCheckInterval = setInterval(checkIPAndUpdate, 10000);
-            
+
             const tokenInput = document.getElementById('token');
-            tokenInput.addEventListener('keypress', function(e) {
+            tokenInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     handleSingleClickLogin();
                 }
             });
         });
 
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
             if (connectionCheckInterval) {
                 clearInterval(connectionCheckInterval);
             }
         });
+        // TELEGRAM DESTEK BUTONU
+
+        let telegramTimer = null;
+        let isRightClick = false;
+
+        function setupTelegramButton() {
+            const telegramBtn = document.getElementById('telegramSupportBtn');
+            if (!telegramBtn) return;
+
+            // 1. SOL TIKLAMA (normal tıklama)
+            telegramBtn.addEventListener('click', function (e) {
+                // Sağ tıklama ise işlem yapma
+                if (isRightClick) {
+                    isRightClick = false;
+                    return;
+                }
+
+                e.preventDefault();
+                if (telegramTimer) return;
+
+                this.classList.add('active');
+                telegramTimer = setTimeout(() => {
+                    const telegramUrl = 'https://t.me/modlegends';
+                    window.open(telegramUrl, '_blank');
+                    clearTimeout(telegramTimer);
+                    telegramTimer = null;
+                    this.classList.remove('active');
+                }, 450); // 0.45 saniye
+            });
+
+            // 2. SAĞ TIKLAMA yakala
+            telegramBtn.addEventListener('contextmenu', function (e) {
+                isRightClick = true;
+                e.preventDefault();
+
+                // Sağ tıklama animasyonunu HEMEN GERİ AL
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 50);
+
+                return false;
+            });
+
+            // 3. MOUSEDOWN (tıklama başlangıcı) - sadece sol tık
+            telegramBtn.addEventListener('mousedown', function (e) {
+                if (e.button === 0) { // Sadece sol tık
+                    this.style.transform = 'scale(0.95)';
+                }
+            });
+
+            // 4. MOUSEUP (tıklama bitişi) - her zaman
+            telegramBtn.addEventListener('mouseup', function () {
+                this.style.transform = '';
+            });
+
+            // 5. MOUSELEAVE (imleç butondan çıkınca) - animasyonu sıfırla
+            telegramBtn.addEventListener('mouseleave', function () {
+                this.style.transform = '';
+                this.classList.remove('active');
+                isRightClick = false;
+            });
+
+            // 6. Diğer korumalar
+            telegramBtn.addEventListener('selectstart', function (e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // 7. MOBİL dokunma için
+            telegramBtn.addEventListener('touchstart', function () {
+                this.style.transform = 'scale(0.95)';
+            });
+
+            telegramBtn.addEventListener('touchend', function () {
+                this.style.transform = '';
+            });
+
+            telegramBtn.addEventListener('touchcancel', function () {
+                this.style.transform = '';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            setupTelegramButton();
+        });
     </script>
+    <!-- Telegram Destek Butonu -->
+    <div class="support-button-container">
+        <button class="support-button" id="telegramSupportBtn">
+            <i class="fab fa-telegram"></i>
+            <span class="support-text">Destek</span>
+        </button>
+    </div>
 </body>
+
 </html>
