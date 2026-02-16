@@ -15,6 +15,10 @@
       "dest": "/storage/$1"
     },
     {
+      "src": "/files/(.*)",
+      "dest": "/files/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
