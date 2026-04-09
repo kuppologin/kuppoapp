@@ -570,6 +570,7 @@
 
         #migros-coupon-container #migros-coupon-input-demo {
             flex-grow: 1; 
+            min-width: 0;
             padding: 0 16px;
             border: 2px solid #e8ecf1; 
             border-radius: 12px;
@@ -578,10 +579,10 @@
             background: #fff;
             outline: none;
             color: #334155;
-            width: 100%;
         }
 
         #migros-coupon-container .apply-coupon-button {
+            flex: 0 0 auto;
             background: linear-gradient(135deg, #e32828 0%, #d42020 100%);
             color: #fff; 
             border: none; 
@@ -687,19 +688,31 @@
                 width: 100%;
             }
             #migros-coupon-container {
-                padding: 16px 14px;
+                padding: 16px 12px;
             }
             #migros-coupon-container .coupon-form {
-                flex-direction: column;
-                gap: 12px;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 8px;
+            }
+            #migros-coupon-container #migros-coupon-input-demo {
+                height: 44px;
+                font-size: 13px;
+                padding: 0 12px;
             }
             #migros-coupon-container .apply-coupon-button {
-                width: 100%;
+                height: 44px;
+                font-size: 13px;
+                padding: 0 16px;
+            }
+            #migros-coupon-container .coupon-title {
+                margin-top: 4px;
+                font-size: 1rem;
             }
             .live-preview-badge {
                 position: absolute;
-                top: 14px;
-                right: 14px;
+                top: 12px;
+                right: 12px;
                 font-size: 9px;
                 padding: 4px 8px;
             }
