@@ -60,7 +60,6 @@
             padding: 35px 30px;
         }
 
-        /* İndirme kartı */
         .download-card {
             background: linear-gradient(135deg, #f0f7ff, #ffffff);
             border: 1px solid #e2e8f0;
@@ -100,7 +99,6 @@
             transform: none;
         }
 
-        /* Adım kartları */
         .steps-section {
             margin: 40px 0;
         }
@@ -155,6 +153,8 @@
 
         .step-content {
             flex: 1;
+            width: 100%;
+            overflow: hidden;
         }
 
         .step-title {
@@ -178,7 +178,6 @@
             font-size: 14.5px;
         }
 
-        /* Yeni şık not alanı */
         .info-note {
             display: inline-block;
             margin-top: 10px;
@@ -230,7 +229,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Android Accordion */
         .android-accordion {
             background: #ffffff;
             border-radius: 24px;
@@ -358,7 +356,6 @@
             gap: 6px;
         }
 
-        /* TELEGRAM DESTEK BUTONU */
         .support-button-container {
             position: fixed;
             bottom: 20px;
@@ -425,7 +422,6 @@
             font-size: 18px;
         }
 
-        /* Sistem bildirimi */
         .system-notification {
             position: fixed;
             bottom: -100px;
@@ -487,11 +483,11 @@
             word-break: break-word;
         }
 
-        /* ===== COUPON DEMO ===== */
         #demo-coupon-wrapper {
             text-align: left;
             margin: 25px auto 10px auto;
             max-width: 420px;
+            width: 100%;
             position: relative;
             display: block;
         }
@@ -506,6 +502,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: #1a1a2e;
             overflow: hidden;
+            width: 100%;
         }
 
         #migros-coupon-container::before {
@@ -516,7 +513,6 @@
             border-radius: 16px 16px 0 0;
         }
 
-        /* ÖNİZLEME ROZETİ */
         .live-preview-badge {
             position: absolute;
             top: 18px;
@@ -569,7 +565,7 @@
         }
 
         #migros-coupon-container .coupon-form {
-            display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch;
+            display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch; width: 100%;
         }
 
         #migros-coupon-container #migros-coupon-input-demo {
@@ -582,6 +578,7 @@
             background: #fff;
             outline: none;
             color: #334155;
+            width: 100%;
         }
 
         #migros-coupon-container .apply-coupon-button {
@@ -595,6 +592,7 @@
             cursor: pointer; 
             height: 48px; 
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         #migros-coupon-container .apply-coupon-button:hover {
             transform: translateY(-2px);
@@ -636,6 +634,7 @@
             font-weight: 700; color: #e32828; font-size: 14px;
             background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
             padding: 5px 10px; border-radius: 8px;
+            white-space: nowrap;
         }
         
         #migros-coupon-container .coupon-item-min {
@@ -682,14 +681,27 @@
                 padding: 14px 18px;
                 font-size: 16px;
             }
+            
             #demo-coupon-wrapper {
-                margin: 20px 0 10px 0;
+                margin: 15px 0 5px 0;
+                width: 100%;
+            }
+            #migros-coupon-container {
+                padding: 16px 14px;
+            }
+            #migros-coupon-container .coupon-form {
+                flex-direction: column;
+                gap: 12px;
+            }
+            #migros-coupon-container .apply-coupon-button {
+                width: 100%;
             }
             .live-preview-badge {
-                position: relative;
-                top: 0; right: 0;
-                width: fit-content;
-                margin-bottom: 15px;
+                position: absolute;
+                top: 14px;
+                right: 14px;
+                font-size: 9px;
+                padding: 4px 8px;
             }
         }
     </style>
