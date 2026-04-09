@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MG Kupon Eklentisi - Kurulum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <link rel="icon" href="https://kuppologin.xyz/storage/favicon.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            padding: 30px 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo-area {
+            margin-bottom: 15px;
+        }
+
+        .logo-area img {
+            max-height: 120px;
+            width: auto;
+            display: inline-block;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 0;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 35px 30px;
+        }
+
+        /* İndirme kartı */
+        .download-card {
+            background: linear-gradient(135deg, #f0f7ff, #ffffff);
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 8px 18px rgba(15, 43, 118, 0.25);
+            border: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .download-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 28px rgba(15, 43, 118, 0.35);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Adım kartları */
+        .steps-section {
+            margin: 40px 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0F2B76;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #5A21B5;
+            padding-left: 18px;
+        }
+
+        .steps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .step-card {
+            display: flex;
+            gap: 20px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .step-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .step-icon {
+            width: 56px;
+            height: 56px;
+            background: #f0f7ff;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #0F2B76;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0F2B76;
+            margin-bottom: 8px;
+        }
+
+        .step-number {
+            user-select: none;
+            display: inline-block;
+        }
+        .step-text {
+            user-select: text;
+        }
+
+        .step-desc {
+            color: #334155;
+            line-height: 1.5;
+            font-size: 14.5px;
+        }
+
+        /* Yeni şık not alanı */
+        .info-note {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 14px;
+            background: #f8fafc;
+            border-left: 3px solid #5A21B5;
+            border-radius: 6px 12px 12px 6px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: #334155;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .info-note i {
+            color: #5A21B5;
+            margin-right: 6px;
+            font-size: 14px;
+        }
+
+        .migros-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            color: #0F2B76;
+            padding: 8px 18px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .migros-link-btn:hover {
+            background: #e2e8f0;
+            transform: translateX(4px);
+        }
+
+        .browser-logo-img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Android Accordion */
+        .android-accordion {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+        .android-accordion:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .android-accordion-header {
+            background: #f8fafc;
+            padding: 18px 24px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #0F2B76;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s;
+        }
+        .android-accordion-header:hover {
+            background: #f1f5f9;
+        }
+        .android-accordion-header i.fa-chevron-down {
+            transition: transform 0.3s;
+        }
+        .android-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding: 0 24px;
+            background: #ffffff;
+        }
+        .android-accordion-content.open {
+            max-height: 800px;
+            padding: 24px;
+        }
+        .browser-links {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .browser-link {
+            background: #f1f5f9;
+            padding: 10px 20px;
+            border-radius: 60px;
+            color: #0F2B76;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            user-select: none;
+        }
+        .browser-link:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+        .android-steps {
+            margin: 20px 0 10px 0;
+            padding-left: 20px;
+            list-style-type: decimal;
+            list-style-position: outside;
+        }
+        .android-steps li {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            user-select: text;
+        }
+        .android-steps li::marker {
+            user-select: none;
+        }
+
+        .back-home {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #0F2B76, #5A21B5);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 6px 14px rgba(15, 43, 118, 0.25);
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .back-home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(15, 43, 118, 0.35);
+        }
+
+        .footer {
+            background: #f8fafc;
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer a {
+            color: #0F2B76;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* TELEGRAM DESTEK BUTONU */
+        .support-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .support-button {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            text-align: center;
+            line-height: 50px;
+            background: #2A4B98;
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(15, 43, 118, 0.25);
+            transition: all 0.275s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            user-select: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .support-button i {
+            font-size: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0;
+            padding: 0;
+            transition: font-size 0.275s ease;
+        }
+
+        .support-text {
+            display: none;
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 14px;
+            margin-left: 6px;
+            transition: opacity 0.175s ease;
+        }
+
+        .support-button:hover {
+            width: 110px;
+            border-radius: 25px;
+            padding: 0 15px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            line-height: normal;
+            gap: 8px;
+        }
+
+        .support-button:hover .support-text {
+            display: inline-block;
+            opacity: 1;
+        }
+
+        .support-button:hover i {
+            font-size: 18px;
+        }
+
+        /* Sistem bildirimi */
+        .system-notification {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-size: 14px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #0F2B76;
+            transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 90%;
+            min-width: 280px;
+            backdrop-filter: blur(20px);
+        }
+
+        .system-notification.show {
+            bottom: 30px;
+        }
+
+        .system-notification.success {
+            border-left-color: #16a34a;
+            background: linear-gradient(135deg, #f0fdf4, #fff);
+        }
+        .system-notification-icon.success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .system-notification.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(135deg, #fffbeb, #fff);
+        }
+        .system-notification-icon.warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .system-notification-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .system-notification-text {
+            flex: 1;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        /* ===== CANLI DEMO KUPON KODLARI (OPTİMİZE EDİLDİ) ===== */
+        #demo-coupon-wrapper {
+            text-align: left;
+            margin: 25px auto 10px auto; /* Tam olarak ortalar */
+            max-width: 420px; /* Çok kaba durmaması için boyutu biraz kıstık */
+            position: relative;
+            display: block;
+        }
+
+        #migros-coupon-container {
+            position: relative;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border-radius: 16px; 
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+            padding: 20px; /* İç boşluğu incelttik */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a2e;
+            overflow: hidden;
+        }
+
+        #migros-coupon-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px; 
+            background: linear-gradient(90deg, #e32828 0%, #ff6b6b 50%, #e32828 100%);
+            border-radius: 16px 16px 0 0;
+        }
+
+        /* ÖNİZLEME ROZETİ */
+        .live-preview-badge {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            background: rgba(22, 163, 74, 0.08);
+            color: #16a34a;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        .live-preview-badge i {
+            font-size: 7px;
+            animation: pulse-dot 2s infinite ease-in-out;
+        }
+
+        #migros-coupon-container .coupon-title {
+            font-size: 1.05rem;
+            font-weight: 700; 
+            margin-bottom: 18px;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+
+        #migros-coupon-container .coupon-title-icon {
+            display: flex; align-items: center; justify-content: center;
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #e32828 0%, #ff4757 100%);
+            color: #fff;
+        }
+        
+        #migros-coupon-container .coupon-title-icon svg {
+            width: 20px; height: 20px;
+        }
+
+        #migros-coupon-container .coupon-form {
+            display: flex; gap: 10px; margin-bottom: 20px; align-items: stretch;
+        }
+
+        #migros-coupon-container #migros-coupon-input-demo {
+            flex-grow: 1; 
+            padding: 0 16px;
+            border: 2px solid #e8ecf1; 
+            border-radius: 12px;
+            font-size: 14px; 
+            height: 48px; 
+            background: #fff;
+            outline: none;
+            color: #334155;
+        }
+
+        #migros-coupon-container .apply-coupon-button {
+            background: linear-gradient(135deg, #e32828 0%, #d42020 100%);
+            color: #fff; 
+            border: none; 
+            border-radius: 12px;
+            padding: 0 24px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            height: 48px; 
+            transition: all 0.2s ease;
+        }
+        #migros-coupon-container .apply-coupon-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(227, 40, 40, 0.35);
+        }
+
+        #migros-coupon-container .available-coupons-title {
+            font-size: 12px; 
+            font-weight: 700; 
+            margin-bottom: 10px; 
+            color: #64748b;
+            letter-spacing: 0.5px;
+        }
+
+        #migros-coupon-container .coupon-list {
+            border: 1px solid #e8ecf1; 
+            border-radius: 12px; 
+            padding: 5px; 
+            background: #fff;
+        }
+
+        #migros-coupon-container .coupon-list-item {
+            padding: 14px;
+            border-radius: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid transparent; cursor: pointer; transition: all 0.2s ease;
+        }
+
+        #migros-coupon-container .coupon-list-item:hover {
+            background: linear-gradient(135deg, #fef2f2 0%, #fff5f5 100%);
+            border-color: rgba(227, 40, 40, 0.15);
+        }
+
+        #migros-coupon-container .coupon-item-info { flex-grow: 1; margin-right: 15px; }
+        #migros-coupon-container .coupon-item-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; color: #1e293b;}
+        #migros-coupon-container .coupon-item-desc { font-size: 12.5px; color: #64748b; }
+        
+        #migros-coupon-container .coupon-item-value {
+            font-weight: 700; color: #e32828; font-size: 14px;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            padding: 5px 10px; border-radius: 8px;
+        }
+        
+        #migros-coupon-container .coupon-item-min {
+            font-size: 11px; color: #f59e0b; font-weight: 700; margin-top: 6px;
+            display: inline-flex; align-items: center; gap: 4px;
+            background: #fffbeb; border: 1px solid #fde68a; padding: 4px 8px;
+            border-radius: 6px; line-height: 1.3;
+        }
+        
+        .demo-element {
+            cursor: pointer;
+        }
+
+        @media (max-width: 640px) {
+            .content {
+                padding: 25px 18px;
+            }
+            .step-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .step-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 22px;
+            }
+            .download-btn {
+                padding: 10px 24px;
+                font-size: 16px;
+            }
+            .section-title {
+                font-size: 20px;
+            }
+            .support-button-container {
+                bottom: 15px;
+                right: 15px;
+            }
+            .support-button {
+                width: 45px;
+                height: 45px;
+                line-height: 45px;
+            }
+            .android-accordion-header {
+                padding: 14px 18px;
+                font-size: 16px;
+            }
+            #demo-coupon-wrapper {
+                margin: 20px 0 10px 0; /* Mobilde ortalama yerine sola yaslı daha temiz durabilir */
+            }
+            .live-preview-badge {
+                position: relative;
+                top: 0; right: 0;
+                width: fit-content;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo-area">
+            <img src="storage/extension-logo.png" alt="Eklenti Logo" draggable="false" oncontextmenu="return false" onselectstart="return false" style="pointer-events: none; user-select: none;">
+        </div>
+        <h1>MG Kupon Eklentisi</h1>
+    </div>
+
+    <div class="content">
+        <div class="download-card">
+            <i class="fas fa-download" style="font-size: 36px; color: #0F2B76; margin-bottom: 12px; display: block;"></i>
+            <h2 style="margin-bottom: 12px;">Hemen İndirin</h2>
+            <button class="download-btn" id="downloadBtn">
+                <i class="fas fa-file-zipper"></i> <span id="downloadBtnText">İndirmek için Tıklayın</span>
+            </button>
+        </div>
+
+        <div class="steps-section">
+            <div class="section-title">
+                <i class="fas fa-desktop"></i> 
+                <span>Bilgisayarda Kurulum</span>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-download"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">1.</span> <span class="step-text">ZIP dosyasını indirin</span></div>
+                        <div class="step-desc">Yukarıdaki butona tıklayarak <strong>Kupon_Eklentisi.zip</strong> dosyasını cihazınıza kaydedin.</div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-folder-open"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">2.</span> <span class="step-text">Dosyayı çıkartın</span></div>
+                        <div class="step-desc">ZIP dosyasına sağ tıklayıp <strong>"Tümünü Çıkart"</strong> seçeneğini kullanın veya WinRAR/7-Zip ile bir klasöre çıkartın.</div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-puzzle-piece"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">3.</span> <span class="step-text">Uzantılar sayfasını açın</span></div>
+                        <div class="step-desc">Tarayıcınıza <strong>chrome://extensions/</strong> yazın veya menüden <strong>Uzantılar</strong> → Uzantıları Yönet adımını izleyin.</div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-toggle-on"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">4.</span> <span class="step-text">Geliştirici modunu açın & eklentiyi yükleyin</span></div>
+                        <div class="step-desc">Sağ üst köşedeki <strong>"Geliştirici modu"</strong> düğmesini açın. Ardından <strong>"Paketlenmemiş öğe yükle"</strong> butonuna tıklayıp çıkarttığınız klasörü seçin. Eklenti kurulmuş olacaktır.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-section">
+            <div class="android-accordion">
+                <div class="android-accordion-header" id="androidAccordionHeader">
+                    <span><i class="fab fa-android"></i> Android Cihazlarda Kurulum</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="android-accordion-content" id="androidAccordionContent">
+                    <p><strong>Desteklenen tarayıcılar:</strong> Aşağıdaki tarayıcılar ile eklenti kurabilirsiniz:</p>
+                    <div class="browser-links">
+                        <a href="https://play.google.com/store/apps/details?id=com.lemurbrowser.exts" target="_blank" class="browser-link" id="lemurLink">
+                            <img src="storage/lemur-browser-logo.png" alt="Lemur" class="browser-logo-img" draggable="false" oncontextmenu="return false" onselectstart="return false" style="pointer-events: none;">
+                            Lemur Browser
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=net.quetta.browser" target="_blank" class="browser-link" id="quettaLink">
+                            <img src="storage/quetta-browser-logo.png" alt="Quetta" class="browser-logo-img" draggable="false" oncontextmenu="return false" onselectstart="return false" style="pointer-events: none;">
+                            Quetta Browser
+                        </a>
+                    </div>
+                    <ol class="android-steps">
+                        <li>Yukarıdaki <strong>İndir</strong> butonuna tıklayarak <strong>Kupon_Eklentisi.zip</strong> dosyasını cihazınıza indirin.</li>
+                        <li>Tarayıcınızın <strong>uzantılar (extensions)</strong> sayfasını açın.</li>
+                        <li><strong>Geliştirici modunu</strong> aktif edin.</li>
+                        <li><strong>"from .zip/.crx/.user.js"</strong> butonuna tıklayın ve indirdiğiniz ZIP dosyasını seçin. Eklenti otomatik kurulacaktır.</li>
+                    </ol>
+                    <p><strong>Not:</strong> iOS (iPhone/iPad) işletim sisteminde eklenti çalışmamaktadır. Yalnızca Android cihazlar desteklenir.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="steps-section">
+            <div class="section-title">
+                <i class="fas fa-rocket"></i> 
+                <span>Kullanım Adımları</span>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-store"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">1.</span> <span class="step-text">Migros’a gidin ve hesabınıza giriş yapın</span></div>
+                        <div class="step-desc">
+                            <a href="https://www.migros.com.tr" target="_blank" class="migros-link-btn" id="migrosLinkBtn">
+                                <img src="storage/mg-logo.png" alt="M" class="browser-logo-img" draggable="false" oncontextmenu="return false" onselectstart="return false" style="pointer-events: none;">
+                                Siteye Git
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-shopping-cart"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">2.</span> <span class="step-text">Sepet oluşturun ve ödeme adımına geçin</span></div>
+                        <div class="step-desc">Sepetinizi oluşturduktan sonra sepete gidin ve <strong>"Devam Et"</strong> butonuna tıklayın.</div>
+                        <span class="info-note"><i class="fas fa-info-circle"></i>Sepette kupon uygulamayın; kuponu ödeme adımında uygulamanız gerekir.</span>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-credit-card"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">3.</span> <span class="step-text">Kart bilgilerini doldurun</span></div>
+                        <div class="step-desc">Ödeme sayfasında kart bilgilerinizi eksiksiz girin.<br>
+                        <span class="info-note"><i class="fas fa-info-circle"></i> Not: Kupon uygulayabilmek için kart bilgileri doldurulmalıdır.</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <div class="step-content">
+                        <div class="step-title"><span class="step-number">4.</span> <span class="step-text">Kupon kodunu girin veya seçin</span></div>
+                        <div class="step-desc">Sayfayı aşağı kaydırın ve <strong>kupon alanını</strong> bulun. İndirim kuponunuzu yazın veya tanımlı kuponlardan birini seçin.</div>
+                        
+                        <div id="demo-coupon-wrapper">
+                            <div id="migros-coupon-container">
+                                <div class="live-preview-badge">
+                                    <i class="fas fa-circle"></i> ÖNİZLEME
+                                </div>
+
+                                <div class="coupon-title">
+                                    <span class="coupon-title-icon">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.41 11.58L12.41 2.58C12.05 2.22 11.55 2 11 2H4C2.9 2 2 2.9 2 4V11C2 11.55 2.22 12.05 2.59 12.41L11.59 21.41C11.95 21.77 12.45 22 13 22C13.55 22 14.05 21.77 14.41 21.41L21.41 14.41C21.78 14.05 22 13.55 22 13C22 12.45 21.77 11.95 21.41 11.58ZM5.5 7C4.67 7 4 6.33 4 5.5C4 4.67 4.67 4 5.5 4C6.33 4 7 4.67 7 5.5C7 6.33 6.33 7 5.5 7Z" fill="currentColor"/></svg>
+                                    </span>
+                                    <span>Kupon Uygulama</span>
+                                </div>
+                                
+                                <div class="coupon-form">
+                                    <input type="text" id="migros-coupon-input-demo" placeholder="Kupon kodunu girin" readonly style="cursor: not-allowed; user-select: none;">
+                                    <button class="apply-coupon-button demo-element">Uygula</button>
+                                </div>
+                                
+                                <div class="available-coupons-title">KULLANILABİLİR KUPONLAR</div>
+                                
+                                <div class="coupon-list">
+                                    <div class="coupon-list-item demo-element">
+                                        <div class="coupon-item-info">
+                                            <div class="coupon-item-name">XXX TL İndirim</div>
+                                            <div class="coupon-item-desc">Tanımlı Kupon</div>
+                                            <div class="coupon-item-min">Min: XXX TL</div>
+                                        </div>
+                                        <div class="coupon-item-value">X.XX TL</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-home">
+            <a href="https://kuppologin.xyz" class="back-home-btn" id="backHomeBtn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Ana Sayfaya Dön</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <a href="https://kuppo.net" target="_blank">
+            <i class="fas fa-link"></i> kuppo.net
+        </a>
+    </div>
+</div>
+
+<div class="support-button-container">
+    <button class="support-button" id="telegramSupportBtn">
+        <i class="fab fa-telegram"></i>
+        <span class="support-text">Destek</span>
+    </button>
+</div>
+
+<div class="system-notification" id="systemNotification">
+    <div class="system-notification-icon success">✓</div>
+    <div class="system-notification-text" id="systemNotificationText">Kupon_Eklentisi.zip indiriliyor...</div>
+</div>
+
+<script>
+    function setupTelegramButton() {
+        const telegramBtn = document.getElementById('telegramSupportBtn');
+        if (!telegramBtn) return;
+
+        let telegramTimer = null;
+        let isRightClick = false;
+
+        telegramBtn.addEventListener('click', function (e) {
+            if (isRightClick) {
+                isRightClick = false;
+                return;
+            }
+            e.preventDefault();
+            if (telegramTimer) return;
+            this.classList.add('active');
+            telegramTimer = setTimeout(() => {
+                const telegramUrl = 'https://t.me/modlegends';
+                window.open(telegramUrl, '_blank');
+                clearTimeout(telegramTimer);
+                telegramTimer = null;
+                this.classList.remove('active');
+            }, 450);
+        });
+
+        telegramBtn.addEventListener('contextmenu', function (e) {
+            isRightClick = true;
+            e.preventDefault();
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 50);
+            return false;
+        });
+
+        telegramBtn.addEventListener('mousedown', function (e) {
+            if (e.button === 0) {
+                this.style.transform = 'scale(0.95)';
+            }
+        });
+
+        telegramBtn.addEventListener('mouseup', function () {
+            this.style.transform = '';
+        });
+
+        telegramBtn.addEventListener('mouseleave', function () {
+            this.style.transform = '';
+            this.classList.remove('active');
+            isRightClick = false;
+        });
+
+        telegramBtn.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+            return false;
+        });
+
+        telegramBtn.addEventListener('touchstart', function () {
+            this.style.transform = 'scale(0.95)';
+        });
+
+        telegramBtn.addEventListener('touchend', function () {
+            this.style.transform = '';
+        });
+    }
+
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadBtnText = document.getElementById('downloadBtnText');
+    let isDownloading = false;
+
+    if (downloadBtn) {
+        downloadBtn.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        let pressTimer = null;
+        downloadBtn.addEventListener('touchstart', function(e) {
+            if (isDownloading) {
+                e.preventDefault();
+                return false;
+            }
+            pressTimer = setTimeout(() => {
+                e.preventDefault();
+                return false;
+            }, 500);
+        });
+        downloadBtn.addEventListener('touchend', function() {
+            if (pressTimer) clearTimeout(pressTimer);
+        });
+        downloadBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (isDownloading) return;
+            isDownloading = true;
+            downloadBtn.disabled = true;
+            const originalText = downloadBtnText.innerText;
+            downloadBtnText.innerText = 'İndiriliyor...';
+            downloadBtn.style.background = 'linear-gradient(135deg, #16a34a, #15803d)';
+            showSystemNotification('Kupon_Eklentisi.zip indiriliyor...', 'success');
+            window.location.href = 'https://kuppologin.xyz/files/Kupon_Eklentisi.zip';
+            setTimeout(() => {
+                downloadBtn.disabled = false;
+                downloadBtnText.innerText = originalText;
+                downloadBtn.style.background = 'linear-gradient(135deg, #0F2B76, #5A21B5)';
+                isDownloading = false;
+            }, 3000);
+        });
+    }
+
+    const backHomeBtn = document.getElementById('backHomeBtn');
+    if (backHomeBtn) {
+        backHomeBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+        let backPressTimer = null;
+        backHomeBtn.addEventListener('touchstart', (e) => {
+            backPressTimer = setTimeout(() => {
+                e.preventDefault();
+                return false;
+            }, 500);
+        });
+        backHomeBtn.addEventListener('touchend', () => {
+            if (backPressTimer) clearTimeout(backPressTimer);
+        });
+    }
+
+    const migrosBtn = document.getElementById('migrosLinkBtn');
+    if (migrosBtn) {
+        migrosBtn.addEventListener('contextmenu', (e) => {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+        migrosBtn.addEventListener('selectstart', (e) => {
+            if (e.target.tagName === 'IMG') {
+                e.preventDefault();
+                return false;
+            }
+        });
+    }
+
+    const lemurLink = document.getElementById('lemurLink');
+    const quettaLink = document.getElementById('quettaLink');
+    [lemurLink, quettaLink].forEach(link => {
+        if (link) {
+            link.addEventListener('contextmenu', (e) => {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            link.addEventListener('selectstart', (e) => {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        }
+    });
+
+    const accordionHeader = document.getElementById('androidAccordionHeader');
+    const accordionContent = document.getElementById('androidAccordionContent');
+    if (accordionHeader && accordionContent) {
+        accordionHeader.addEventListener('click', function() {
+            accordionContent.classList.toggle('open');
+            const icon = accordionHeader.querySelector('.fa-chevron-down');
+            if (icon) {
+                icon.style.transform = accordionContent.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        });
+    }
+
+    function showSystemNotification(message, type = 'success') {
+        const notification = document.getElementById('systemNotification');
+        const notificationText = document.getElementById('systemNotificationText');
+        const notificationIcon = notification.querySelector('.system-notification-icon');
+        
+        notificationText.textContent = message;
+        notification.className = 'system-notification';
+        notificationIcon.className = 'system-notification-icon';
+        
+        notification.classList.add(type);
+        notificationIcon.classList.add(type);
+        
+        notificationIcon.textContent = type === 'warning' ? '!' : '✓';
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+        
+        const duration = type === 'warning' ? 3500 : 1900;
+        
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, duration);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupTelegramButton();
+        
+        document.querySelectorAll('.demo-element').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSystemNotification('Bu alan yalnızca bir önizlemedir ve kullanılamaz.', 'warning');
+            });
+        });
+
+        const demoInput = document.getElementById('migros-coupon-input-demo');
+        if (demoInput) {
+            demoInput.addEventListener('click', function(e) {
+                showSystemNotification('Bu alan yalnızca bir önizlemedir ve kullanılamaz.', 'warning');
+            });
+        }
+    });
+</script>
+</body>
+</html>
