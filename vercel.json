@@ -19,8 +19,8 @@
       "dest": "/files/$1"
     },
     {
-      "src": "/eklenti",
-      "dest": "/eklenti.html"
+      "src": "/extkuppo",
+      "dest": "/extkuppo.html"
     },
     {
       "src": "/(.*)",
