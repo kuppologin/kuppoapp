@@ -19,6 +19,10 @@
       "dest": "/files/$1"
     },
     {
+      "src": "/eklenti",
+      "dest": "/eklenti.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
