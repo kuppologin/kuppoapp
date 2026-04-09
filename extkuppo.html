@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>MG Kupon Eklentisi - Kurulum</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
-    <link rel="icon" href="https://kuppologin.xyz/storage/favicon.png" type="image/png">
+    <link rel="icon" href="storage/favicon.png" type="image/png">
     <style>
         * {
             margin: 0;
@@ -487,11 +487,11 @@
             word-break: break-word;
         }
 
-        /* ===== CANLI DEMO KUPON KODLARI (OPTİMİZE EDİLDİ) ===== */
+        /* ===== COUPON DEMO ===== */
         #demo-coupon-wrapper {
             text-align: left;
-            margin: 25px auto 10px auto; /* Tam olarak ortalar */
-            max-width: 420px; /* Çok kaba durmaması için boyutu biraz kıstık */
+            margin: 25px auto 10px auto;
+            max-width: 420px;
             position: relative;
             display: block;
         }
@@ -502,7 +502,7 @@
             border-radius: 16px; 
             border: 1px solid rgba(0, 0, 0, 0.08);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
-            padding: 20px; /* İç boşluğu incelttik */
+            padding: 20px;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: #1a1a2e;
             overflow: hidden;
@@ -683,7 +683,7 @@
                 font-size: 16px;
             }
             #demo-coupon-wrapper {
-                margin: 20px 0 10px 0; /* Mobilde ortalama yerine sola yaslı daha temiz durabilir */
+                margin: 20px 0 10px 0;
             }
             .live-preview-badge {
                 position: relative;
@@ -715,14 +715,14 @@
         <div class="steps-section">
             <div class="section-title">
                 <i class="fas fa-desktop"></i> 
-                <span>Bilgisayarda Kurulum</span>
+                <span>Kurulum Adımları</span>
             </div>
             <div class="steps-grid">
                 <div class="step-card">
                     <div class="step-icon"><i class="fas fa-download"></i></div>
                     <div class="step-content">
                         <div class="step-title"><span class="step-number">1.</span> <span class="step-text">ZIP dosyasını indirin</span></div>
-                        <div class="step-desc">Yukarıdaki butona tıklayarak <strong>Kupon_Eklentisi.zip</strong> dosyasını cihazınıza kaydedin.</div>
+                        <div class="step-desc">Yukarıdaki butona tıklayarak <strong>MG Kupon Eklentisi.zip</strong> dosyasını cihazınıza kaydedin.</div>
                     </div>
                 </div>
                 <div class="step-card">
@@ -768,7 +768,7 @@
                         </a>
                     </div>
                     <ol class="android-steps">
-                        <li>Yukarıdaki <strong>İndir</strong> butonuna tıklayarak <strong>Kupon_Eklentisi.zip</strong> dosyasını cihazınıza indirin.</li>
+                        <li>Yukarıdaki <strong>İndir</strong> butonuna tıklayarak <strong>MG Kupon Eklentisi.zip</strong> dosyasını cihazınıza indirin.</li>
                         <li>Tarayıcınızın <strong>uzantılar (extensions)</strong> sayfasını açın.</li>
                         <li><strong>Geliştirici modunu</strong> aktif edin.</li>
                         <li><strong>"from .zip/.crx/.user.js"</strong> butonuna tıklayın ve indirdiğiniz ZIP dosyasını seçin. Eklenti otomatik kurulacaktır.</li>
@@ -860,7 +860,7 @@
         </div>
 
         <div class="back-home">
-            <a href="https://kuppologin.xyz" class="back-home-btn" id="backHomeBtn">
+            <a href="/" class="back-home-btn" id="backHomeBtn">
                 <i class="fas fa-arrow-left"></i>
                 <span>Ana Sayfaya Dön</span>
             </a>
@@ -883,7 +883,7 @@
 
 <div class="system-notification" id="systemNotification">
     <div class="system-notification-icon success">✓</div>
-    <div class="system-notification-text" id="systemNotificationText">Kupon_Eklentisi.zip indiriliyor...</div>
+    <div class="system-notification-text" id="systemNotificationText">MG Kupon Eklentisi.zip indiriliyor...</div>
 </div>
 
 <script>
@@ -982,8 +982,8 @@
             const originalText = downloadBtnText.innerText;
             downloadBtnText.innerText = 'İndiriliyor...';
             downloadBtn.style.background = 'linear-gradient(135deg, #16a34a, #15803d)';
-            showSystemNotification('Kupon_Eklentisi.zip indiriliyor...', 'success');
-            window.location.href = 'https://kuppologin.xyz/files/Kupon_Eklentisi.zip';
+            showSystemNotification('MG Kupon Eklentisi.zip indiriliyor...', 'success');
+            window.location.href = 'files/MG%20Kupon%20Eklentisi.zip';
             setTimeout(() => {
                 downloadBtn.disabled = false;
                 downloadBtnText.innerText = originalText;
